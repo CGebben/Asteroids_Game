@@ -313,18 +313,18 @@ public class Controller {
         promptLabel.setStyle("-fx-font-size: 20pt; -fx-text-fill: white;");
         TextField name = new TextField();
         Button saveButton = new Button("Save");
+
         saveButton.setOnAction(event -> {
             String playerName = name.getText();
             try {
-                try {
-                    BufferedWriter writer = new BufferedWriter(
-                            new FileWriter("src/main/resources/highScores.txt", true));
-                    writer.write(playerName + ": " + points + "\n");
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                File file = new File("../game-data/highScores.txt"); // Updated path
+                file.getParentFile().mkdirs(); // Ensure game-data exists
 
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+                writer.write(playerName + ": " + points + "\n");
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             } finally {
                 stage.close();
             }
@@ -333,21 +333,18 @@ public class Controller {
         root.getChildren().addAll(promptLabel, name, saveButton);
 
         Scene scene = new Scene(root, 300, 200);
-
         stage.setScene(scene);
         stage.show();
     }
 
     @FXML
     public void display() {
-
         VBox root = new VBox();
         root.setStyle("-fx-background-color: black;");
 
         StringBuilder content = new StringBuilder();
         try {
-            BufferedReader reader = new BufferedReader(
-                    new FileReader("src/main/resources/highScores.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("../game-data/highScores.txt")); // Updated path
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -357,27 +354,27 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Label highScoresLabel = new Label(content.toString());
         highScoresLabel.setFont(Font.font("Brush Script MT", 15));
         highScoresLabel.setTextFill(Color.WHITE);
         root.getChildren().add(highScoresLabel);
+
         Scene scene = new Scene(root, 300, 200);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
-
     }
 
     @FXML
     public void Introduction() {
-
         VBox root = new VBox();
         root.setStyle("-fx-background-color: black;");
         Pane pane = new Pane();
         StringBuilder content = new StringBuilder();
+
         try {
-            BufferedReader reader = new BufferedReader(
-                    new FileReader("src/main/resources/introduction.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("../game-data/introduction.txt")); // Updated path
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -388,7 +385,6 @@ public class Controller {
                     if (i % 50 == 0) {
                         content.append("\n");
                     }
-
                 }
                 content.append("\n");
             }
@@ -396,14 +392,17 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Label label = new Label(content.toString());
         label.setFont(Font.font("Brush Script MT", 20));
         label.setTextFill(Color.WHITE);
         pane.getChildren().add(label);
         root.getChildren().add(pane);
+
         Scene scene = new Scene(root, 300, 200);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
     }
+
 }
