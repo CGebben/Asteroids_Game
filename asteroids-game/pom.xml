@@ -1,12 +1,20 @@
+<!-- 
+  Maven Project Object Model (POM) for managing dependencies and build configurations.
+  Specifies JavaFX dependencies, Java version, and required plugins.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Define Maven Model Version -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Project Information -->
     <groupId>com.asteroids</groupId>
     <artifactId>asteroids-game</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!-- Set Java Version and Encoding -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
@@ -14,8 +22,9 @@
         <junit.version>5.9.1</junit.version>
     </properties>
 
+    <!-- Dependencies Section -->
     <dependencies>
-    <!-- JavaFX Dependencies -->
+        <!-- JavaFX Dependencies (Ensures JavaFX is included in the project) -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -38,9 +47,10 @@
         </dependency>
     </dependencies>
 
+    <!-- Build Configuration -->
     <build>
         <plugins>
-            <!-- Compiler Plugin -->
+            <!-- Java Compiler Plugin (Compiles Java Code) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -51,7 +61,7 @@
                 </configuration>
             </plugin>
 
-            <!-- JavaFX Plugin -->
+            <!-- JavaFX Maven Plugin (Handles JavaFX Runtime & Packaging) -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>

@@ -4,18 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * The Level class defines enemy configurations for different game levels.
+ * It determines the number of asteroids and aliens present in a given level.
+ */
 public class Level {
     private int levelNumber;
 
+    // Number of different types of enemies per level.
     private int numSize1Asteroids;
     private int numSize2Asteroids;
     private int numSize3Asteroids;
     private int numAliens;
 
+    // List to store enemies (asteroids and aliens).
     private List<Character> enemyList;
 
+    // Random number generator for enemy placement.
     private Random rnd = new Random();
 
+    /**
+     * Creates an array of Level objects, each defining different enemy setups.
+     * The difficulty increases with each level.
+     * 
+     * Return an array containing predefined Level objects.
+     */
     public static Level[] createLevels() {
         Level[] levels = new Level[5];
 
@@ -28,6 +41,11 @@ public class Level {
         return levels;
     }
 
+    /**
+     * Constructs a Level with a specified number of asteroids and aliens.
+     * Generates enemy objects and adds them to the enemy list.
+     **/
+
     public Level(int levelNumber, int numSize1Asteroids, int numSize2Asteroids, int numSize3Asteroids, int numAliens) {
         this.levelNumber = levelNumber;
         this.numSize1Asteroids = numSize1Asteroids;
@@ -37,6 +55,7 @@ public class Level {
 
         this.enemyList = new ArrayList<>();
 
+        // Generate and place asteroids of different sizes.
         for (int i = 0; i < numSize1Asteroids; i++) {
             Asteroid asteroid = new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 1);
             this.enemyList.add(asteroid);
@@ -58,10 +77,12 @@ public class Level {
         }
     }
 
+    // Retrieves the list of enemies present in this level.
     public List<Character> getEnemyList() {
         return enemyList;
     }
 
+    // Getters and setters for level attributes.
     public int getLevelNumber() {
         return levelNumber;
     }

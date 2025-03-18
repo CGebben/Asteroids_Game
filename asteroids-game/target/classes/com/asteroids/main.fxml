@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- Import necessary JavaFX components -->
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,26 +9,51 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Text?>
 
-
+<!-- 
+  VBox container for the main menu.
+  - Alignment is CENTER, spacing set to 20px.
+  - Background color is black.
+  - Controller is set to `com.asteroids.Controller`
+-->
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.asteroids.Controller" style="-fx-background-color: black">
+
+    <!-- Padding around the VBox -->
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
-    <Text fill="WHITE" text="ASTEROIDS" styleClass = "title" style="-fx-font-weight: bold;-fx-font-size: 35;"/>
-    <Text fill="WHITE" layoutY="101.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0"
-          style="-fx-font-weight: bold;-fx-font-size: 20;" text="PRESS BUTTON TO START" textAlignment="CENTER" wrappingWidth="417.0">
-    </Text>
-    <Button  alignment="CENTER" defaultButton="true" focusTraversable="false"
-            layoutX="8.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#start" prefHeight="40.0"
-            prefWidth="203.0" style="-fx-background-color: white; -fx-border-color: white; -fx-font-size: 30;"
-            text="NEW GAME" textAlignment="CENTER" textOverrun="CLIP" styleClass = "star_button" onAction = "#start"/>
-    <Button  alignment="CENTER" defaultButton="true" focusTraversable="false"
-            layoutX="8.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#display" prefHeight="40.0"
-            prefWidth="203.0" style="-fx-background-color: white; -fx-border-color: white; -fx-font-size: 30;"
-            text="HIGH SCORE" textAlignment="CENTER" textOverrun="CLIP" styleClass = "star_button" onAction = "#display"/>
-    <Button  alignment="CENTER" defaultButton="true" focusTraversable="false"
-            layoutX="8.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#start" prefHeight="40.0"
-            prefWidth="203.0" style="-fx-background-color: white; -fx-border-color: white; -fx-font-size: 30;"
-            text="INTRODUCTION" textAlignment="CENTER" textOverrun="CLIP" styleClass = "star_button" onAction = "#Introduction"/>
+
+    <!-- Title Text -->
+    <Text fill="WHITE" text="ASTEROIDS" styleClass="title"
+          style="-fx-font-weight: bold; -fx-font-size: 35;"/>
+
+    <!-- Subtext prompting player to start -->
+    <Text fill="WHITE" layoutY="101.0" stroke="WHITE"
+          style="-fx-font-weight: bold; -fx-font-size: 20;"
+          text="PRESS BUTTON TO START" textAlignment="CENTER"
+          wrappingWidth="417.0"/>
+
+    <!-- New Game Button -->
+    <Button alignment="CENTER" defaultButton="true" 
+            focusTraversable="false" mnemonicParsing="false"
+            prefHeight="40.0" prefWidth="203.0"
+            style="-fx-background-color: white; -fx-border-color: white; -fx-font-size: 30;"
+            text="NEW GAME" styleClass="star_button"
+            onAction="#start"/>
+
+    <!-- High Score Button -->
+    <Button alignment="CENTER" defaultButton="true"
+            focusTraversable="false" mnemonicParsing="false"
+            prefHeight="40.0" prefWidth="203.0"
+            style="-fx-background-color: white; -fx-border-color: white; -fx-font-size: 30;"
+            text="HIGH SCORE" styleClass="star_button"
+            onAction="#display"/>
+
+    <!-- Introduction Button -->
+    <Button alignment="CENTER" defaultButton="true"
+            focusTraversable="false" mnemonicParsing="false"
+            prefHeight="40.0" prefWidth="203.0"
+            style="-fx-background-color: white; -fx-border-color: white; -fx-font-size: 30;"
+            text="INTRODUCTION" styleClass="star_button"
+            onAction="#Introduction"/>
 </VBox>

@@ -1,41 +1,53 @@
 package com.asteroids;
 
-// import JavaFX Polygon class
+// Import JavaFX Polygon class for defining the bullet shape.
 import javafx.scene.shape.Polygon;
 
-// define a Bullets class that extends the Character class
+/**
+ * Represents a bullet in the game.
+ * Bullets are fired by the player's ship and move in a straight line.
+ * This class extends the Character class and inherits its movement behavior.
+ */
 public class Bullet extends Character {
 
-    // constructor method for Bullets class that takes two integers as arguments
+    /**
+     * Constructs a Bullet object at the specified (x, y) coordinates.
+     * The bullet is represented as a small square polygon.
+     *
+     * x The initial X-coordinate of the bullet.
+     * y The initial Y-coordinate of the bullet.
+     */
     public Bullet(int x, int y) {
-        // create a new Polygon object with 4 points and pass it to the parent Character
-        // class constructor along with the x and y arguments
+        // Call the superclass constructor with a small square-shaped polygon.
         super(new Polygon(5, -5, 5, 5, -5, 5, -5, -5), x + 50, y + 30);
     }
 
-    // move method for Bullets class that moves the Bullet object by the current
-    // movement value
+    /**
+     * Moves the bullet forward in its current direction.
+     * The movement is determined by its velocity vector.
+     */
     @Override
     public void move() {
-        // set the new x and y position of the Bullet object based on its current
-        // position and movement values
         super.getCharacter().setTranslateX(super.getCharacter().getTranslateX() + super.getMovement().getX());
         super.getCharacter().setTranslateY(super.getCharacter().getTranslateY() + super.getMovement().getY());
     }
 
-    // acc method for Bullets class that modifies the movement value of the Bullet
-    // object
+    /**
+     * Accelerates the bullet in the direction it is facing.
+     * The speed is calculated using trigonometry based on its rotation angle.
+     */
     @Override
     public void acc() {
-        // call the parent Character class acc method to increment the current movement
-        // value
+
+        // Call the superclass acceleration method.
         super.acc();
-        // calculate the new x and y movement values based on the current angle of the
-        // Bullet object and set them using the parent Character class setMovement
-        // method
+
+        // Calculate the movement vector based on the bullet's rotation angle.
         double angle = Math.toRadians(super.getCharacter().getRotate());
         double X = Math.cos(angle) * 5;
         double Y = Math.sin(angle) * 5;
+
+        // Apply the new movement values.
         super.setMovement(X, Y);
     }
 }
