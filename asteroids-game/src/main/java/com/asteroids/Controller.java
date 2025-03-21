@@ -1,7 +1,6 @@
 package com.asteroids;
 
 // Import JavaFX libraries for UI components, animations, and event handling.
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -12,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -46,9 +44,6 @@ public class Controller {
     List<Character> enemies = new ArrayList<>();
     List<Asteroid> asteroidsToDowngrade = new ArrayList<>();
 
-    // Timestamp for alien spawn logic.
-    private long alienSpawnTime;
-
     // Game UI components.
     static Pane pane = new Pane();
     Pane end_pane = new Pane();
@@ -59,6 +54,9 @@ public class Controller {
 
     // Timeline for managing timed events.
     static Timeline timeline = new Timeline();
+
+    // Creates instance for input handling.
+    private InputHandler inputHandler = new InputHandler();
 
     /**
      * Initializes the game when the "New Game" button is pressed.
@@ -103,244 +101,14 @@ public class Controller {
         stage.setScene(scene);
         stage.show();
 
-        // Track key presses for player movement.
-        Map<KeyCode, Boolean> pressedKey = new HashMap<>();
-        scene.setOnKeyPressed(keyEvent -> {
-            pressedKey.put(keyEvent.getCode(), Boolean.TRUE);
-        });
-        scene.setOnKeyReleased(keyEvent -> {
-            pressedKey.put(keyEvent.getCode(), Boolean.FALSE);
-        });
+        // Initialize input handling.
+        inputHandler.initialize(scene); // Attach input handling to the scene
 
-        // Create a new AnimationTimer that continuously updates game logic.
-        new AnimationTimer() {
-            private long lastUpdate = 0;
-            private long lastbullets = 0;
-            private int currentLevel = 0;
-
-            /**
-             * This method runs continuously, handling real-time game updates.
-             * 'now' represents the current timestamp in nanoseconds.
-             */
-            public void handle(long now) {
-
-                // Hyperspace logic: If 'A' is pressed, teleport the ship randomly.
-                if (pressedKey.getOrDefault(KeyCode.A, false)) {
-                    pressedKey.remove(KeyCode.A);
-                    boolean collision;
-                    timeline.stop();
-
-                    do {
-                        collision = false;
-                        ship.Hyperspace();
-                        for (Character enemy : enemies) {
-                            if (enemy.collide(ship)) {
-                                collision = true;
-                                break;
-                            }
-                        }
-                        for (Bullet bullet : alien_bullets) {
-                            if (ship.collide(bullet)) {
-                                collision = true;
-                                break;
-                            }
-                        }
-                    } while (collision);
-                    addInvincibility(5);
-                }
-
-                // Handle ship movement based on key presses.
-                if (pressedKey.getOrDefault(KeyCode.LEFT, false)) {
-                    ship.turnLeft();
-                }
-                if (pressedKey.getOrDefault(KeyCode.RIGHT, false)) {
-                    ship.turnRight();
-                }
-                if (pressedKey.getOrDefault(KeyCode.UP, false)) {
-                    ship.setHyperspaced(false);
-                    ship.acc();
-                }
-
-                // Handle bullet firing (spacebar).
-                if (pressedKey.getOrDefault(KeyCode.SPACE, false) && (now - lastUpdate > 330_000_000)) {
-                    Bullet bullet = new Bullet((int) (ship.getCharacter().getTranslateX()),
-                            (int) (ship.getCharacter().getTranslateY()));
-                    bullet.getCharacter().setRotate(ship.getCharacter().getRotate());
-                    bullets.add(bullet);
-                    bullet.acc();
-                    pane.getChildren().add(bullet.getCharacter());
-                    lastUpdate = now;
-                }
-
-                // Handle enemy shooting (only alien ships fire bullets).
-                enemies.forEach(enemy -> {
-                    if (now - alienSpawnTime > 5_000_000_000L && enemy.getSize() == 4) {
-                        while (now - lastbullets > 1_000_000_000) {
-                            Bullet bullet1 = new Bullet((int) (enemy.getCharacter().getTranslateX()),
-                                    (int) (enemy.getCharacter().getTranslateY()));
-                            var diff_y = ship.getCharacter().getTranslateX() - enemy.getCharacter().getTranslateX();
-                            var diff_x = ship.getCharacter().getTranslateY() - enemy.getCharacter().getTranslateY();
-                            var angle = Math.toDegrees(Math.atan2(diff_x, diff_y));
-                            bullet1.getCharacter().setRotate(angle);
-                            alien_bullets.add(bullet1);
-                            bullet1.acc();
-                            pane.getChildren().add(bullet1.getCharacter());
-                            lastbullets = now;
-                        }
-                    }
-                });
-
-                // Move the ship if it is not in hyperspace mode.
-                if (!ship.isHyperspaced()) {
-                    ship.move();
-                }
-
-                // Move all enemies on the screen.
-                enemies.forEach(enemy -> {
-                    enemy.move();
-                });
-
-                // Handle collisions between the player and enemies.
-                enemies.forEach(enemy -> {
-                    if (enemy.collide(ship) && !ship.isInvincible()) {
-                        lives--;
-                        livesText.setText("Lives: " + lives);
-                        if (lives > 0) {
-                            // Reset the ship position and add temporary invincibility.
-                            ship.getCharacter().setTranslateX(Width / 3);
-                            ship.getCharacter().setTranslateY(Height / 3);
-                            addInvincibility(5);
-                        } else {
-                            // If lives reach 0, end the game.
-                            pane.getChildren().remove(ship.getCharacter());
-                            stage.setScene(endgame);
-                            saveScore();
-                            stop();
-                            stage.close();
-                            livesText.setText("Game Over");
-                        }
-                    }
-                });
-
-                // Move bullets
-                bullets.forEach(bullet -> {
-                    bullet.move();
-                });
-                alien_bullets.forEach(bullet1 -> {
-                    bullet1.move();
-                });
-
-                // Check for collisions between player and alien bullets.
-                Iterator<Bullet> alienBulletIterator = alien_bullets.iterator();
-                while (alienBulletIterator.hasNext()) {
-                    Bullet bullet = alienBulletIterator.next();
-                    if (ship.collide(bullet) && !ship.isInvincible()) {
-                        lives--;
-                        livesText.setText("Lives: " + lives);
-                        pane.getChildren().remove(bullet.getCharacter());
-                        alienBulletIterator.remove();
-
-                        // Reset ship position and grant temporary invincibility.
-                        if (lives > 0) {
-                            // Reset the ship position and make it invincible for a short time
-                            ship.getCharacter().setTranslateX(Width / 3);
-                            ship.getCharacter().setTranslateY(Height / 3);
-                            addInvincibility(5);
-                        } else {
-                            // If player runs out of lives, end the game.
-                            pane.getChildren().remove(ship.getCharacter());
-                            stage.setScene(endgame);
-                            saveScore();
-                            stop();
-                            stage.close();
-                            livesText.setText("Game Over: " + points);
-                        }
-                    }
-                }
-
-                // Check for collisions between bullets and enemies.
-                Iterator<Bullet> bulletIterator = bullets.iterator();
-                while (bulletIterator.hasNext()) {
-                    Bullet bullet = bulletIterator.next();
-                    Iterator<Character> enemyIterator = enemies.iterator();
-                    while (enemyIterator.hasNext()) {
-                        Character enemy = enemyIterator.next();
-                        if (enemy.collide(bullet)) {
-                            if (enemy.getSize() == 1) {
-                                points += 10;
-                                text.setText("Points:" + points);
-                            }
-                            if (enemy.getSize() == 2 || enemy.getSize() == 3) {
-                                points += 30;
-                                text.setText("Points:" + points);
-                                double X = enemy.getCharacter().getTranslateX();
-                                double Y = enemy.getCharacter().getTranslateY();
-                                int Z = enemy.getSize();
-                                asteroidsToDowngrade.add(new Asteroid((int) X + 10, (int) Y + 10, Z - 1));
-                                asteroidsToDowngrade.add(new Asteroid((int) X - 10, (int) Y - 10, Z - 1));
-                            }
-                            if (enemy.getSize() == 4) {
-                                points += 100;
-                                text.setText("Points:" + points);
-                                alien_bullets.forEach(bullet1 -> {
-                                    pane.getChildren().remove(bullet1.getCharacter());
-                                });
-                                alien_bullets.clear();
-                            }
-
-                            // Remove the bullet and enemy from the game
-                            pane.getChildren().remove(bullet.getCharacter());
-                            bulletIterator.remove(); // Remove bullet using iterator
-                            pane.getChildren().remove(enemy.getCharacter());
-                            enemyIterator.remove(); // Remove enemy using iterator
-                        }
-                    }
-                    ;
-                }
-                ;
-
-                // Downgrade asteroids when hit.
-                for (Asteroid asteroid : asteroidsToDowngrade) {
-                    Downgrade((int) asteroid.getCharacter().getTranslateX(),
-                            (int) asteroid.getCharacter().getTranslateY(), asteroid.getSize());
-                }
-                asteroidsToDowngrade.clear();
-
-                // Handle level progression when all enemies are destroyed.
-                if (enemies.isEmpty()) {
-                    currentLevel++;
-                    if (currentLevel >= levels.length) {
-                        // If all levels are completed, display win message.
-                        pane.getChildren().remove(ship.getCharacter());
-                        stage.setScene(endgame);
-                        text.setText("You Win!");
-                        return;
-                    }
-
-                    // Remove all bullets from the screen before starting the next level
-                    bullets.forEach(bullet -> {
-                        pane.getChildren().remove(bullet.getCharacter());
-                    });
-                    bullets.clear();
-
-                    alien_bullets.forEach(bullet -> {
-                        pane.getChildren().remove(bullet.getCharacter());
-                    });
-                    alien_bullets.clear();
-
-                    // Load new enemies for the next level.
-                    enemies.clear();
-                    enemies = levels[currentLevel].getEnemyList();
-                    enemies.forEach(enemy -> {
-                        pane.getChildren().add(enemy.getCharacter());
-                    });
-
-                    // Set alien ship spawn timer.
-                    alienSpawnTime = System.nanoTime();
-                }
-                ;
-            };
-        }.start();
+        // Inside Controller.java
+        GameLoop gameLoop = new GameLoop(
+                ship, bullets, alien_bullets, enemies, asteroidsToDowngrade,
+                levels, livesText, text, stage, pane, endgame, inputHandler, lives, points);
+        gameLoop.start();
     }
 
     /**
