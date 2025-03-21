@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- Import necessary JavaFX components -->
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Pos?>
 
 <!-- 
   VBox container for the main menu.
@@ -16,44 +14,36 @@
   - Controller is set to `com.asteroids.Controller`
 -->
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.asteroids.Controller" style="-fx-background-color: black">
+      fx:controller="com.asteroids.Controller" style="-fx-background-color: black"
+      prefWidth="800" prefHeight="600">
 
-    <!-- Padding around the VBox -->
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets top="40.0" bottom="40.0" left="50.0" right="50.0"/>
     </padding>
 
-    <!-- Title Text -->
-    <Text fill="WHITE" text="ASTEROIDS" styleClass="title"
-          style="-fx-font-weight: bold; -fx-font-size: 35;"/>
+    <Text text="ASTEROIDS" fill="WHITE" style="-fx-font-weight: bold; -fx-font-size: 48;" />
 
-    <!-- Subtext prompting player to start -->
-    <Text fill="WHITE" layoutY="101.0" stroke="WHITE"
-          style="-fx-font-weight: bold; -fx-font-size: 20;"
-          text="PRESS BUTTON TO START" textAlignment="CENTER"
-          wrappingWidth="417.0"/>
+    <Button fx:id="startButton"
+            text="START"
+            onAction="#start"
+            maxWidth="300"
+            minHeight="60"
+            style="-fx-font-size: 24; -fx-background-color: white; -fx-border-color: white;"
+            alignment="CENTER" />
 
-    <!-- New Game Button -->
-    <Button alignment="CENTER" defaultButton="true" 
-            focusTraversable="false" mnemonicParsing="false"
-            prefHeight="40.0" prefWidth="203.0"
-            style="-fx-background-color: white; -fx-border-color: white; -fx-font-size: 30;"
-            text="NEW GAME" styleClass="star_button"
-            onAction="#start"/>
+    <Button fx:id="scoreButton"
+            text="SCOREBOARD"
+            onAction="#displayScore"
+            maxWidth="300"
+            minHeight="60"
+            style="-fx-font-size: 24; -fx-background-color: white; -fx-border-color: white;"
+            alignment="CENTER" />
 
-    <!-- High Score Button -->
-    <Button alignment="CENTER" defaultButton="true"
-            focusTraversable="false" mnemonicParsing="false"
-            prefHeight="40.0" prefWidth="203.0"
-            style="-fx-background-color: white; -fx-border-color: white; -fx-font-size: 30;"
-            text="HIGH SCORE" styleClass="star_button"
-            onAction="#display"/>
-
-    <!-- Introduction Button -->
-    <Button alignment="CENTER" defaultButton="true"
-            focusTraversable="false" mnemonicParsing="false"
-            prefHeight="40.0" prefWidth="203.0"
-            style="-fx-background-color: white; -fx-border-color: white; -fx-font-size: 30;"
-            text="INTRODUCTION" styleClass="star_button"
-            onAction="#Introduction"/>
+    <Button fx:id="howToButton"
+            text="HOW TO PLAY"
+            onAction="#displayHowTo"
+            maxWidth="300"
+            minHeight="60"
+            style="-fx-font-size: 24; -fx-background-color: white; -fx-border-color: white;"
+            alignment="CENTER" />
 </VBox>

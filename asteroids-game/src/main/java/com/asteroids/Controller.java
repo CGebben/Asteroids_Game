@@ -155,58 +155,11 @@ public class Controller {
     }
 
     /**
-     * Displays a pop-up window that allows the player to enter their name
-     * and saves their score to a file.
-     */
-    public void saveScore() {
-        // Create a new VBox layout for the score-saving window.
-        VBox root = new VBox();
-        root.setStyle("-fx-background-color: black;");
-        Stage stage = new Stage();
-
-        // Prompt label for user input.
-        Label promptLabel = new Label("Please enter your name: ");
-        promptLabel.setStyle("-fx-font-size: 20pt; -fx-text-fill: white;");
-
-        // Input field for player name.
-        TextField name = new TextField();
-
-        // Save button.
-        Button saveButton = new Button("Save");
-        saveButton.setOnAction(event -> {
-            String playerName = name.getText();
-            try {
-                // Define the file path to store scores (relative to the game-data folder).
-                File file = new File("../game-data/highScores.txt"); // Updated path
-                file.getParentFile().mkdirs(); // Ensure game-data exists
-
-                // Append the player's name and score to the file.
-                BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-                writer.write(playerName + ": " + points + "\n");
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                // Close the pop-up window after saving.
-                stage.close();
-            }
-        });
-
-        // Add UI elements to the window.
-        root.getChildren().addAll(promptLabel, name, saveButton);
-
-        // Set up the scene and display it.
-        Scene scene = new Scene(root, 300, 200);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    /**
      * Displays the high scores in a new window.
      * Reads from the highScores.txt file and shows the contents.
      */
     @FXML
-    public void display() {
+    public void displayScore() {
         // Create a VBox layout for the high score window.
         VBox root = new VBox();
         root.setStyle("-fx-background-color: black;");
@@ -214,7 +167,7 @@ public class Controller {
         StringBuilder content = new StringBuilder();
         try {
             // Open the high scores file.
-            BufferedReader reader = new BufferedReader(new FileReader("../game-data/highScores.txt")); // Updated path
+            BufferedReader reader = new BufferedReader(new FileReader("../game-data/scoreboard.txt")); // Updated path
             String line;
 
             // Read all lines and append them to the content.
@@ -244,7 +197,7 @@ public class Controller {
      * Reads from introduction.txt and presents it in a formatted manner.
      */
     @FXML
-    public void Introduction() {
+    public void displayHowTo() {
         // Create a VBox layout for the introduction window.
         VBox root = new VBox();
         root.setStyle("-fx-background-color: black;");
@@ -253,7 +206,7 @@ public class Controller {
 
         try {
             // Open the introduction file.
-            BufferedReader reader = new BufferedReader(new FileReader("../game-data/introduction.txt")); // Updated path
+            BufferedReader reader = new BufferedReader(new FileReader("../game-data/howtoplay.txt")); // Updated path
             String line;
 
             // Read and format the introduction text (adds line breaks every 50 characters).
@@ -286,5 +239,4 @@ public class Controller {
         stage.setScene(scene);
         stage.show();
     }
-
 }

@@ -133,6 +133,7 @@ public class GameLoop extends AnimationTimer {
                 } else {
                     pane.getChildren().remove(ship.getCharacter());
                     stage.setScene(endgame);
+                    new ScoreManager().showScoreEntry(points);
                     stop();
                     stage.close();
                     livesText.setText("Game Over");
@@ -167,6 +168,9 @@ public class GameLoop extends AnimationTimer {
             pane.getChildren().remove(ship.getCharacter());
             stage.setScene(endgame);
             text.setText("You Win!");
+            new ScoreManager().showScoreEntry(points);
+            stop();
+            stage.close();
             return;
         }
 
