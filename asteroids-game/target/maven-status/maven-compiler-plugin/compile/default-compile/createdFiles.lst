@@ -3,7 +3,6 @@ com\asteroids\Controller$1.class
 com\asteroids\Bullet.class
 com\asteroids\Character.class
 com\asteroids\Asteroid.class
-com\asteroids\Controller$2.class
 com\asteroids\Ship.class
 module-info.class
 com\asteroids\App.class

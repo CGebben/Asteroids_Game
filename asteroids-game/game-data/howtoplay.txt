@@ -1,0 +1,19 @@
+Operation Introduction:
+
+Up Arrow: Thrust Forward
+
+Left Arrow: Rotate Left
+
+Right Arrow: Rotate Right
+
+Spacebar: Fire Bullet
+
+A Button: Hyperspace Jump
+
+Player is invincible at the beginning of the game, 
+after a hyperspace jump to another location, and after dying.
+
+Player is killed if collides with asteroid or alien ship, 
+or is it with an alien ship bullet.
+
+Player score is added to high score list after game ends.

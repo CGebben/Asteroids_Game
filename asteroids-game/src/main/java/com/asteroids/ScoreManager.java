@@ -19,7 +19,7 @@ public class ScoreManager {
         root.setStyle("-fx-background-color: black;");
         Stage stage = new Stage();
 
-        Label promptLabel = new Label("Please enter your name: ");
+        Label promptLabel = new Label("ENTER NAME: ");
         promptLabel.setStyle("-fx-font-size: 20pt; -fx-text-fill: white;");
         TextField name = new TextField();
         Button saveButton = new Button("Save");
@@ -27,7 +27,7 @@ public class ScoreManager {
         saveButton.setOnAction(event -> {
             String playerName = name.getText();
             try {
-                File file = new File("../game-data/highScores.txt");
+                File file = new File("game-data/scoreboard.txt");
                 file.getParentFile().mkdirs(); // Ensure game-data exists
 
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));

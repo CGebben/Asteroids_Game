@@ -167,7 +167,7 @@ public class Controller {
         StringBuilder content = new StringBuilder();
         try {
             // Open the high scores file.
-            BufferedReader reader = new BufferedReader(new FileReader("../game-data/scoreboard.txt")); // Updated path
+            BufferedReader reader = new BufferedReader(new FileReader("game-data/scoreboard.txt")); // Updated path
             String line;
 
             // Read all lines and append them to the content.
@@ -206,7 +206,7 @@ public class Controller {
 
         try {
             // Open the introduction file.
-            BufferedReader reader = new BufferedReader(new FileReader("../game-data/howtoplay.txt")); // Updated path
+            BufferedReader reader = new BufferedReader(new FileReader("game-data/howtoplay.txt")); // Updated path
             String line;
 
             // Read and format the introduction text (adds line breaks every 50 characters).
