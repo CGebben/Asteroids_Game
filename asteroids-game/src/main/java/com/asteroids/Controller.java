@@ -39,6 +39,7 @@ public class Controller {
     // Lists for tracking bullets, enemies, and asteroids.
     List<Bullet> bullets = new ArrayList<>();
     List<Character> enemies = new ArrayList<>();
+    List<Asteroid> asteroidsToDowngrade = new ArrayList<>();
 
     // Game UI components.
     static Pane pane = new Pane();
@@ -102,32 +103,12 @@ public class Controller {
 
         // Inside Controller.java
         GameLoop gameLoop = new GameLoop(
-                ship, bullets, enemies, levels, livesText, text, stage, pane, endgame, inputHandler, lives, points);
+                ship, bullets, enemies, asteroidsToDowngrade,
+                levels, livesText, text, stage, pane, endgame, inputHandler, lives, points);
         gameLoop.start();
     }
 
-    /**
-     * Downgrades an asteroid when it is hit.
-     * If an asteroid is large, it will break into smaller asteroids.
-     *
-     * x - The x-coordinate of the asteroid.
-     * y - The y-coordinate of the asteroid.
-     * z - The new size of the asteroid.
-     */
-    public void Downgrade(int x, int y, int z) {
-        // Create a new asteroid with the downgraded size.
-        Asteroid asteroid = new Asteroid(x, y, z);
-
-        // Add the downgraded asteroid to the enemy list.
-        enemies.add(asteroid);
-        pane.getChildren().add(asteroid.getCharacter());
-    }
-
-    /**
-     * Grants temporary invincibility to the player's ship.
-     *
-     * seconds - The duration of invincibility in seconds.
-     */
+    /// Grants temporary invincibility to the player's ship.
 
     public static void addInvincibility(int seconds) {
 

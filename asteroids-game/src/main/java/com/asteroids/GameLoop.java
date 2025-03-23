@@ -20,6 +20,7 @@ public class GameLoop extends AnimationTimer {
     private Ship ship;
     private List<Bullet> bullets;
     private List<Character> enemies;
+    private List<Asteroid> asteroidsToDowngrade;
     private Level[] levels;
     private Text livesText;
     private Text text;
@@ -31,12 +32,13 @@ public class GameLoop extends AnimationTimer {
     private int lives;
     private int points;
 
-    public GameLoop(Ship ship, List<Bullet> bullets, List<Character> enemies, Level[] levels, Text livesText, Text text,
-            Stage stage,
+    public GameLoop(Ship ship, List<Bullet> bullets, List<Character> enemies,
+            List<Asteroid> asteroidsToDowngrade, Level[] levels, Text livesText, Text text, Stage stage,
             Pane pane, Scene endgame, InputHandler inputHandler, int lives, int points) {
         this.ship = ship;
         this.bullets = bullets;
         this.enemies = enemies;
+        this.asteroidsToDowngrade = asteroidsToDowngrade;
         this.levels = levels;
         this.livesText = livesText;
         this.text = text;
@@ -101,9 +103,6 @@ public class GameLoop extends AnimationTimer {
         if (!ship.isHyperspaced())
             ship.move();
 
-        // Move Enemies
-        enemies.forEach(Character::move);
-
         // Handle Collisions (we'll move collision handling to its own class later)
         checkCollisions();
 
@@ -113,49 +112,24 @@ public class GameLoop extends AnimationTimer {
         }
     }
 
-    private void checkCollisions() {
-        // Player-Enemy Collision
-        Iterator<Character> enemyIterator = enemies.iterator();
-        while (enemyIterator.hasNext()) {
-            Character enemy = enemyIterator.next();
-            if (enemy.collide(ship) && !ship.isInvincible()) {
-                lives--;
-                livesText.setText("Lives: " + lives);
-                if (lives > 0) {
-                    ship.getCharacter().setTranslateX(Controller.Width / 3);
-                    ship.getCharacter().setTranslateY(Controller.Height / 3);
-                    addInvincibility(5);
-                } else {
-                    pane.getChildren().remove(ship.getCharacter());
-                    stage.setScene(endgame);
-                    new ScoreManager().showScoreEntry(points);
-                    stop();
-                    stage.close();
-                    livesText.setText("Game Over");
-                }
-                enemyIterator.remove();
-            }
+    /// Downgrades asteroid when hit.
+    private void downgrade(int x, int y, int z) {
+        // Create a new asteroid with the downgraded size.
+        Asteroid asteroid = new Asteroid(x, y, z);
+
+        // Add the downgraded asteroid to the enemy list.
+        enemies.add(asteroid);
+        pane.getChildren().add(asteroid.getCharacter());
         }
 
-        // Bullet-Enemy Collision
-        Iterator<Bullet> bulletIterator = bullets.iterator();
-        while (bulletIterator.hasNext()) {
-            Bullet bullet = bulletIterator.next();
-            enemyIterator = enemies.iterator();
-            while (enemyIterator.hasNext()) {
-                Character enemy = enemyIterator.next();
-                if (enemy.collide(bullet)) {
-                    points += 10; // Adjusted for simplicity
-                    text.setText("Points: " + points);
-                    pane.getChildren().remove(enemy.getCharacter());
-                    enemyIterator.remove();
-                    pane.getChildren().remove(bullet.getCharacter());
-                    bulletIterator.remove();
-                    break;
-                }
-            }
-        }
-    }
+    // Downgrade asteroids when hit.
+    for(
+
+    Asteroid asteroid:asteroidsToDowngrade)
+    {
+        downgrade((int) asteroid.getCharacter().getTranslateX(),
+                (int) asteroid.getCharacter().getTranslateY(), asteroid.getSize());
+    }asteroidsToDowngrade.clear();
 
     private void advanceLevel() {
         currentLevel++;
