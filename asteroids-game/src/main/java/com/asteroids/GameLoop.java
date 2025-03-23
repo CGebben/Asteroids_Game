@@ -19,7 +19,6 @@ public class GameLoop extends AnimationTimer {
     private Ship ship;
     private List<Bullet> bullets;
     private List<Character> enemies;
-    private List<Asteroid> asteroidsToSplit;
     private Level[] levels;
     private Text livesText;
     private Text text;
@@ -28,7 +27,6 @@ public class GameLoop extends AnimationTimer {
     private Scene endgame;
     private InputHandler inputHandler;
     private CollisionManager collisionManager;
-
     private int lives;
     private int points;
 
@@ -38,7 +36,6 @@ public class GameLoop extends AnimationTimer {
         this.ship = ship;
         this.bullets = bullets;
         this.enemies = enemies;
-        this.asteroidsToSplit = asteroidsToSplit;
         this.levels = levels;
         this.livesText = livesText;
         this.text = text;
@@ -105,8 +102,9 @@ public class GameLoop extends AnimationTimer {
         if (!ship.isHyperspaced())
             ship.move();
 
-        // Handle Collisions (we'll move collision handling to its own class later)
+        // Handle Collisions
         collisionManager.checkCollisions();
+
         collisionManager.asteroidSplitting();
 
         // Level Progression
@@ -123,8 +121,8 @@ public class GameLoop extends AnimationTimer {
     }
 
     private void advanceLevel() {
-        currentLevel++;
-        if (currentLevel >= levels.length) {
+        System.out.println("Advancing to level " + currentLevel);
+        if (currentLevel + 1 >= levels.length) {
             pane.getChildren().remove(ship.getCharacter());
             stage.setScene(endgame);
             text.setText("You Win!");
@@ -134,11 +132,16 @@ public class GameLoop extends AnimationTimer {
             return;
         }
 
+        currentLevel++; // Move increment down here
+        System.out.println("Advancing to level " + currentLevel);
+
         bullets.forEach(bullet -> pane.getChildren().remove(bullet.getCharacter()));
         bullets.clear();
 
         enemies.clear();
-        enemies = levels[currentLevel].getEnemyList();
+        enemies.clear();
+        enemies.addAll(levels[currentLevel].getEnemyList());
+        System.out.println("Enemies after loading new level: " + enemies.size());
         enemies.forEach(enemy -> pane.getChildren().add(enemy.getCharacter()));
     }
 }

@@ -105,23 +105,20 @@ public class CollisionManager {
                     livesText.setText("Game Over");
                     gameOver = true;
                 }
-                enemyIterator.remove();
             }
         }
 
-        // Check for collisions between bullets and enemies.
+        List<Character> enemiesToRemove = new ArrayList<>();
+        List<Bullet> bulletsToRemove = new ArrayList<>();
         Iterator<Bullet> bulletIterator = bullets.iterator();
         while (bulletIterator.hasNext()) {
             Bullet bullet = bulletIterator.next();
-            Iterator<Character> enemyIteratorForBullets = enemies.iterator();
-            while (enemyIteratorForBullets.hasNext()) {
-                Character enemy = enemyIteratorForBullets.next();
+            for (Character enemy : new ArrayList<>(enemies)) {
                 if (enemy.collide(bullet)) {
                     if (enemy.getSize() == 1) {
                         points += 10;
                         scoreText.setText("Points:" + points);
-                    }
-                    if (enemy.getSize() == 2 || enemy.getSize() == 3) {
+                    } else if (enemy.getSize() == 2 || enemy.getSize() == 3) {
                         points += 30;
                         scoreText.setText("Points:" + points);
                         double X = enemy.getCharacter().getTranslateX();
@@ -131,15 +128,23 @@ public class CollisionManager {
                         asteroidsToSplit.add(new Asteroid((int) X - 10, (int) Y - 10, Z - 1));
                     }
 
-                    // Remove the bullet and enemy from the game
-                    pane.getChildren().remove(bullet.getCharacter());
-                    bulletIterator.remove(); // Remove bullet using iterator
-                    pane.getChildren().remove(enemy.getCharacter());
-                    enemyIterator.remove(); // Remove enemy using iterator
+                    bulletsToRemove.add(bullet);
+                    enemiesToRemove.add(enemy);
+                    break; // bullet is used up
                 }
             }
-            ;
         }
+
+        for (Bullet bullet : bulletsToRemove) {
+            pane.getChildren().remove(bullet.getCharacter());
+            bullets.remove(bullet);
+        }
+
+        for (Character enemy : enemiesToRemove) {
+            pane.getChildren().remove(enemy.getCharacter());
+            enemies.remove(enemy);
+        }
+
         return gameOver;
     }
 

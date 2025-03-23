@@ -55,14 +55,8 @@ public class Controller {
     // Creates instance for input handling.
     private InputHandler inputHandler = new InputHandler();
 
-    /**
-     * Initializes the game when the "New Game" button is pressed.
-     * This method sets up the game screen, spawns enemies, and starts the animation
-     * loop.
-     *
-     * actionEvent - The event triggered by clicking "New Game".
-     * throws IOException - If there is an issue loading resources.
-     */
+    /// Initializes the game when the "New Game" button is pressed.
+    /// Sets up the game screen, spawns enemies, and starts the animation loop.
     @FXML
     public void start(ActionEvent actionEvent) throws IOException {
         // Close the main menu window.
