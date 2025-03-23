@@ -39,7 +39,7 @@ public class Controller {
     // Lists for tracking bullets, enemies, and asteroids.
     List<Bullet> bullets = new ArrayList<>();
     List<Character> enemies = new ArrayList<>();
-    List<Asteroid> asteroidsToDowngrade = new ArrayList<>();
+    List<Asteroid> asteroidsToSplit = new ArrayList<>();
 
     // Game UI components.
     static Pane pane = new Pane();
@@ -88,8 +88,6 @@ public class Controller {
         enemies.forEach(enemy -> {
             pane.getChildren().add(enemy.getCharacter());
         });
-        // Add initial invincibility for the player.
-        addInvincibility(5);
 
         // Create game scenes.
         Scene scene = new Scene(pane);
@@ -103,37 +101,12 @@ public class Controller {
 
         // Inside Controller.java
         GameLoop gameLoop = new GameLoop(
-                ship, bullets, enemies, asteroidsToDowngrade,
+                ship, bullets, enemies, asteroidsToSplit,
                 levels, livesText, text, stage, pane, endgame, inputHandler, lives, points);
         gameLoop.start();
     }
 
-    /// Grants temporary invincibility to the player's ship.
-
-    public static void addInvincibility(int seconds) {
-
-        // Set the ship to invincible.
-        ship.setInvincible(true);
-
-        // Create a timeline to turn off invincibility after the given duration.
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(seconds), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-                // Reset the ship's invincibility status.
-                ship.setInvincible(false); // Set the ship as not invincible after the duration
-                timeline.stop();
-            }
-        }));
-
-        // Start the timer.
-        timeline.play();
-    }
-
-    /**
-     * Displays the high scores in a new window.
-     * Reads from the highScores.txt file and shows the contents.
-     */
+    /// Displays the high scores in a new window.
     @FXML
     public void displayScore() {
         // Create a VBox layout for the high score window.

@@ -9,6 +9,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 public class CollisionManager {
 
     private final Ship ship;
@@ -24,7 +28,7 @@ public class CollisionManager {
     private int lives;
     private int points;
 
-    private void asteroidSplitting() {
+    public void asteroidSplitting() {
         for (Asteroid asteroid : asteroidsToSplit) {
             int x = (int) asteroid.getCharacter().getTranslateX();
             int y = (int) asteroid.getCharacter().getTranslateY();
@@ -41,8 +45,17 @@ public class CollisionManager {
                 pane.getChildren().add(asteroid2.getCharacter());
             }
         }
-
         asteroidsToSplit.clear();
+    }
+
+    public void addInvincibility(int seconds) {
+        ship.setInvincible(true);
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(seconds), e -> {
+            ship.setInvincible(false);
+        }));
+
+        timeline.play();
     }
 
     public CollisionManager(
@@ -72,8 +85,9 @@ public class CollisionManager {
         this.points = points;
     }
 
-    public void checkCollisions() {
+    public boolean checkCollisions() {
         // Player-Enemy Collision
+        boolean gameOver = false;
         Iterator<Character> enemyIterator = enemies.iterator();
         while (enemyIterator.hasNext()) {
             Character enemy = enemyIterator.next();
@@ -88,9 +102,8 @@ public class CollisionManager {
                     pane.getChildren().remove(ship.getCharacter());
                     stage.setScene(endgame);
                     new ScoreManager().showScoreEntry(points);
-                    stop();
-                    stage.close();
                     livesText.setText("Game Over");
+                    gameOver = true;
                 }
                 enemyIterator.remove();
             }
@@ -127,6 +140,7 @@ public class CollisionManager {
             }
             ;
         }
+        return gameOver;
     }
 
     public List<Asteroid> getNewAsteroids() {

@@ -5,7 +5,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import java.util.Iterator;
 import java.util.List;
 import javafx.scene.Scene;
 
@@ -20,7 +19,7 @@ public class GameLoop extends AnimationTimer {
     private Ship ship;
     private List<Bullet> bullets;
     private List<Character> enemies;
-    private List<Asteroid> asteroidsToDowngrade;
+    private List<Asteroid> asteroidsToSplit;
     private Level[] levels;
     private Text livesText;
     private Text text;
@@ -28,17 +27,18 @@ public class GameLoop extends AnimationTimer {
     private Pane pane;
     private Scene endgame;
     private InputHandler inputHandler;
+    private CollisionManager collisionManager;
 
     private int lives;
     private int points;
 
     public GameLoop(Ship ship, List<Bullet> bullets, List<Character> enemies,
-            List<Asteroid> asteroidsToDowngrade, Level[] levels, Text livesText, Text text, Stage stage,
+            List<Asteroid> asteroidsToSplit, Level[] levels, Text livesText, Text text, Stage stage,
             Pane pane, Scene endgame, InputHandler inputHandler, int lives, int points) {
         this.ship = ship;
         this.bullets = bullets;
         this.enemies = enemies;
-        this.asteroidsToDowngrade = asteroidsToDowngrade;
+        this.asteroidsToSplit = asteroidsToSplit;
         this.levels = levels;
         this.livesText = livesText;
         this.text = text;
@@ -48,6 +48,8 @@ public class GameLoop extends AnimationTimer {
         this.inputHandler = inputHandler;
         this.lives = lives;
         this.points = points;
+        this.collisionManager = new CollisionManager(ship, bullets, enemies, asteroidsToSplit, pane, livesText, text,
+                stage, endgame, new ScoreManager(), lives, points);
     }
 
     @Override
@@ -68,7 +70,7 @@ public class GameLoop extends AnimationTimer {
                     }
                 }
             } while (collision);
-            addInvincibility(5);
+            collisionManager.addInvincibility(5);
         }
 
         // Handle Ship Movement
@@ -104,32 +106,21 @@ public class GameLoop extends AnimationTimer {
             ship.move();
 
         // Handle Collisions (we'll move collision handling to its own class later)
-        checkCollisions();
+        collisionManager.checkCollisions();
+        collisionManager.asteroidSplitting();
 
         // Level Progression
         if (enemies.isEmpty()) {
             advanceLevel();
         }
-    }
 
-    /// Downgrades asteroid when hit.
-    private void downgrade(int x, int y, int z) {
-        // Create a new asteroid with the downgraded size.
-        Asteroid asteroid = new Asteroid(x, y, z);
-
-        // Add the downgraded asteroid to the enemy list.
-        enemies.add(asteroid);
-        pane.getChildren().add(asteroid.getCharacter());
+        boolean gameOver = collisionManager.checkCollisions();
+        if (gameOver) {
+            stop();
+            stage.close();
+            return;
         }
-
-    // Downgrade asteroids when hit.
-    for(
-
-    Asteroid asteroid:asteroidsToDowngrade)
-    {
-        downgrade((int) asteroid.getCharacter().getTranslateX(),
-                (int) asteroid.getCharacter().getTranslateY(), asteroid.getSize());
-    }asteroidsToDowngrade.clear();
+    }
 
     private void advanceLevel() {
         currentLevel++;
@@ -149,10 +140,5 @@ public class GameLoop extends AnimationTimer {
         enemies.clear();
         enemies = levels[currentLevel].getEnemyList();
         enemies.forEach(enemy -> pane.getChildren().add(enemy.getCharacter()));
-    }
-
-    private void addInvincibility(int seconds) {
-        ship.setInvincible(true);
-        // Logic for removing invincibility later (e.g., use Timeline)
     }
 }
