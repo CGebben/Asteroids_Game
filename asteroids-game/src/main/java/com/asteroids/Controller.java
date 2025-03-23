@@ -8,9 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -40,9 +38,7 @@ public class Controller {
 
     // Lists for tracking bullets, enemies, and asteroids.
     List<Bullet> bullets = new ArrayList<>();
-    List<Bullet> alien_bullets = new ArrayList<>();
     List<Character> enemies = new ArrayList<>();
-    List<Asteroid> asteroidsToDowngrade = new ArrayList<>();
 
     // Game UI components.
     static Pane pane = new Pane();
@@ -106,8 +102,7 @@ public class Controller {
 
         // Inside Controller.java
         GameLoop gameLoop = new GameLoop(
-                ship, bullets, alien_bullets, enemies, asteroidsToDowngrade,
-                levels, livesText, text, stage, pane, endgame, inputHandler, lives, points);
+                ship, bullets, enemies, levels, livesText, text, stage, pane, endgame, inputHandler, lives, points);
         gameLoop.start();
     }
 
@@ -181,7 +176,7 @@ public class Controller {
 
         // Display high scores in a label.
         Label highScoresLabel = new Label(content.toString());
-        highScoresLabel.setFont(Font.font("Brush Script MT", 15));
+        highScoresLabel.setFont(Font.font("Times New Roman", 15));
         highScoresLabel.setTextFill(Color.WHITE);
         root.getChildren().add(highScoresLabel);
 
