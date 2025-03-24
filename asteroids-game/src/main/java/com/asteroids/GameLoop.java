@@ -31,7 +31,7 @@ public class GameLoop extends AnimationTimer {
     private int points;
 
     public GameLoop(Ship ship, List<Bullet> bullets, List<Character> enemies,
-            List<Asteroid> asteroidsToSplit, Level[] levels, Text livesText, Text text, Stage stage,
+            List<int[]> asteroidsToSplit, Level[] levels, Text livesText, Text text, Stage stage,
             Pane pane, Scene endgame, InputHandler inputHandler, int lives, int points) {
         this.ship = ship;
         this.bullets = bullets;
@@ -103,20 +103,19 @@ public class GameLoop extends AnimationTimer {
             ship.move();
 
         // Handle Collisions
-        collisionManager.checkCollisions();
-
-        collisionManager.asteroidSplitting();
-
-        // Level Progression
-        if (enemies.isEmpty()) {
-            advanceLevel();
-        }
 
         boolean gameOver = collisionManager.checkCollisions();
         if (gameOver) {
             stop();
             stage.close();
             return;
+        }
+
+        collisionManager.asteroidSplitting();
+
+        // Level Progression
+        if (enemies.isEmpty()) {
+            advanceLevel();
         }
     }
 

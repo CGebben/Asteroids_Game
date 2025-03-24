@@ -18,7 +18,7 @@ public class CollisionManager {
     private final Ship ship;
     private final List<Bullet> bullets;
     private final List<Character> enemies;
-    private final List<Asteroid> asteroidsToSplit;
+    private final List<int[]> asteroidsToSplit;
     private final Pane pane;
     private final Text livesText;
     private final Text scoreText;
@@ -29,21 +29,19 @@ public class CollisionManager {
     private int points;
 
     public void asteroidSplitting() {
-        for (Asteroid asteroid : asteroidsToSplit) {
-            int x = (int) asteroid.getCharacter().getTranslateX();
-            int y = (int) asteroid.getCharacter().getTranslateY();
-            int size = asteroid.getSize();
+        for (int[] data : asteroidsToSplit) {
+            int x = data[0];
+            int y = data[1];
+            int size = data[2];
 
-            if (size > 1) {
-                Asteroid asteroid1 = new Asteroid(x + 10, y + 10, size - 1);
-                Asteroid asteroid2 = new Asteroid(x - 10, y - 10, size - 1);
+            Asteroid asteroid1 = new Asteroid(x + 10, y + 10, size);
+            Asteroid asteroid2 = new Asteroid(x - 10, y - 10, size);
 
-                enemies.add(asteroid1);
-                enemies.add(asteroid2);
+            enemies.add(asteroid1);
+            enemies.add(asteroid2);
 
-                pane.getChildren().add(asteroid1.getCharacter());
-                pane.getChildren().add(asteroid2.getCharacter());
-            }
+            pane.getChildren().add(asteroid1.getCharacter());
+            pane.getChildren().add(asteroid2.getCharacter());
         }
         asteroidsToSplit.clear();
     }
@@ -62,7 +60,7 @@ public class CollisionManager {
             Ship ship,
             List<Bullet> bullets,
             List<Character> enemies,
-            List<Asteroid> asteroidsToSplit,
+            List<int[]> asteroidsToSplit,
             Pane pane,
             Text livesText,
             Text scoreText,
@@ -124,8 +122,7 @@ public class CollisionManager {
                         double X = enemy.getCharacter().getTranslateX();
                         double Y = enemy.getCharacter().getTranslateY();
                         int Z = enemy.getSize();
-                        asteroidsToSplit.add(new Asteroid((int) X + 10, (int) Y + 10, Z - 1));
-                        asteroidsToSplit.add(new Asteroid((int) X - 10, (int) Y - 10, Z - 1));
+                        asteroidsToSplit.add(new int[] { (int) X, (int) Y, Z - 1 });
                     }
 
                     bulletsToRemove.add(bullet);
@@ -148,7 +145,7 @@ public class CollisionManager {
         return gameOver;
     }
 
-    public List<Asteroid> getNewAsteroids() {
+    public List<int[]> getNewAsteroids() {
         return new ArrayList<>(asteroidsToSplit);
     }
 

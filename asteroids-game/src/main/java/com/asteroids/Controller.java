@@ -39,7 +39,7 @@ public class Controller {
     // Lists for tracking bullets, enemies, and asteroids.
     List<Bullet> bullets = new ArrayList<>();
     List<Character> enemies = new ArrayList<>();
-    List<Asteroid> asteroidsToSplit = new ArrayList<>();
+    List<int[]> asteroidsToSplit = new ArrayList<>();
 
     // Game UI components.
     static Pane pane = new Pane();
