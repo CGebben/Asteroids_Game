@@ -1,10 +1,8 @@
 package com.asteroids;
 
 // Import JavaFX libraries for UI components, animations, and event handling.
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -15,7 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 // Import Java standard libraries for file handling and collections.
 import java.io.*;
@@ -66,6 +63,7 @@ public class Controller {
         // Set up the game screen.
         pane.setPrefSize(Width, Height);
         pane.getChildren().add(ship.getCharacter());
+        ship.addInvincibility(5);
 
         // Display score and lives.
         Text text = new Text(10, 20, "Points:" + points);
@@ -98,6 +96,7 @@ public class Controller {
                 ship, bullets, enemies, asteroidsToSplit,
                 levels, livesText, text, stage, pane, endgame, inputHandler, lives, points);
         gameLoop.start();
+
     }
 
     /// Displays the high scores in a new window.

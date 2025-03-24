@@ -55,19 +55,8 @@ public class GameLoop extends AnimationTimer {
         // Handle Hyperspace (A Key)
         if (inputHandler.isKeyPressed(KeyCode.A)) {
             inputHandler.consumeKey(KeyCode.A);
-            boolean collision;
-
-            do {
-                collision = false;
-                ship.Hyperspace();
-                for (Character enemy : enemies) {
-                    if (enemy.collide(ship)) {
-                        collision = true;
-                        break;
-                    }
-                }
-            } while (collision);
-            collisionManager.addInvincibility(5);
+            ship.hyperspace(enemies);
+            ship.addInvincibility(5);
         }
 
         // Handle Ship Movement
@@ -142,5 +131,9 @@ public class GameLoop extends AnimationTimer {
         enemies.addAll(levels[currentLevel].getEnemyList());
         System.out.println("Enemies after loading new level: " + enemies.size());
         enemies.forEach(enemy -> pane.getChildren().add(enemy.getCharacter()));
+
+        // Spawn ship in a safe location and give invincibility
+        ship.hyperspace(enemies);
+        ship.addInvincibility(5);
     }
 }
