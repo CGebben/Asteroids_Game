@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -26,8 +27,8 @@ import java.util.*;
 public class Controller {
 
     // Game screen dimensions.
-    public static int Width = 800;
-    public static int Height = 600;
+    public static int Width = 1280;
+    public static int Height = 720;
 
     // Player stats.
     public int points = 0;
@@ -65,11 +66,14 @@ public class Controller {
         pane.getChildren().add(ship.getCharacter());
         ship.addInvincibility(5);
 
-        // Display score and lives.
-        Text text = new Text(10, 20, "Points:" + points);
+        Text text = new Text(10, 40, "Points: " + points);
+        text.setFont(Font.font("System", 36));
+        text.setFill(Color.BLACK);
         pane.getChildren().add(text);
 
-        Text livesText = new Text(10, 40, "Lives: " + lives);
+        Text livesText = new Text(10, 80, "Lives: " + lives);
+        livesText.setFont(Font.font("System", 36));
+        livesText.setFill(Color.BLACK);
         pane.getChildren().add(livesText);
 
         // Generate enemy levels.
@@ -170,7 +174,7 @@ public class Controller {
 
         // Display introduction text in a label.
         Label label = new Label(content.toString());
-        label.setFont(Font.font("Brush Script MT", 20));
+        label.setFont(Font.font("Times New Roman", 20));
         label.setTextFill(Color.WHITE);
         pane.getChildren().add(label);
         root.getChildren().add(pane);

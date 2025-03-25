@@ -2,9 +2,11 @@ package com.asteroids;
 
 import java.util.List;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 /// Represents the player’s ship. Handles movement, hyperspace, and invincibility.
 public class Ship extends Character {
@@ -26,13 +28,21 @@ public class Ship extends Character {
     public void addInvincibility(int seconds) {
         this.setInvincible(true);
 
-        Timeline timeline = new Timeline(new javafx.animation.KeyFrame(
-                javafx.util.Duration.seconds(seconds),
-                e -> {
-                    this.setInvincible(false);
-                }));
+        Timeline blinkTimeline = new Timeline(new KeyFrame(Duration.millis(150), e -> {
+            // Toggle visibility
+            Polygon shape = this.getCharacter();
+            shape.setOpacity(shape.getOpacity() == 1 ? 0.3 : 1.0);
+        }));
 
-        timeline.play();
+        blinkTimeline.setCycleCount((seconds * 1000) / 250); // Run for duration
+
+        Timeline endTimeline = new Timeline(new KeyFrame(Duration.seconds(seconds), e -> {
+            this.setInvincible(false);
+            this.getCharacter().setOpacity(1.0); // Ensure it stays visible
+        }));
+
+        blinkTimeline.play();
+        endTimeline.play();
     }
 
     /// Moves the ship to a random location away from nearby enemies.
