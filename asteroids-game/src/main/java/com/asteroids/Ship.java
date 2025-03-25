@@ -79,4 +79,14 @@ public class Ship extends Character {
     public void setHyperspaced(boolean hyperspaced) {
         isHyperspaced = hyperspaced;
     }
+
+    private boolean reversing = false;
+
+    public void setReversing(boolean reversing) {
+        this.reversing = reversing;
+    }
+
+    public boolean isReversing() {
+        return this.reversing;
+    }
 }

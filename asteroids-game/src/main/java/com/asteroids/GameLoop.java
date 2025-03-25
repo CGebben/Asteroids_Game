@@ -1,6 +1,7 @@
 package com.asteroids;
 
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -37,13 +38,11 @@ public class GameLoop extends AnimationTimer {
         this.bullets = bullets;
         this.enemies = enemies;
         this.levels = levels;
-        this.livesText = livesText;
         this.text = text;
         this.stage = stage;
         this.pane = pane;
         this.endgame = endgame;
         this.inputHandler = inputHandler;
-        this.lives = lives;
         this.points = points;
         this.collisionManager = new CollisionManager(ship, bullets, enemies, asteroidsToSplit, pane, livesText, text,
                 stage, endgame, new ScoreManager(), lives, points);
@@ -64,10 +63,30 @@ public class GameLoop extends AnimationTimer {
             ship.turnLeft();
         if (inputHandler.isKeyPressed(KeyCode.RIGHT))
             ship.turnRight();
-        if (inputHandler.isKeyPressed(KeyCode.UP))
-            ship.acc();
-        if (inputHandler.isKeyPressed(KeyCode.DOWN))
-            ship.dec(); // Call the new deceleration method
+
+        // UP = Forward
+        if (inputHandler.isKeyPressed(KeyCode.UP)) {
+            // If currently reversing, decelerate until we stop
+            if (ship.isReversing() && ship.getMovement().magnitude() > 0.1) {
+                ship.dec();
+            } else {
+                ship.setReversing(false); // We're going forward now
+                ship.forwardMotion();
+                ship.acc();
+            }
+        }
+
+        // DOWN = Reverse
+        if (inputHandler.isKeyPressed(KeyCode.DOWN)) {
+            // If currently going forward, decelerate until we stop
+            if (!ship.isReversing() && ship.getMovement().magnitude() > 0.1) {
+                ship.dec();
+            } else {
+                ship.setReversing(true); // We're going backward now
+                ship.backwardMotion();
+                ship.acc();
+            }
+        }
 
         // Handle Shooting
         if (inputHandler.isKeyPressed(KeyCode.SPACE) && (now - lastUpdate > 330_000_000)) {

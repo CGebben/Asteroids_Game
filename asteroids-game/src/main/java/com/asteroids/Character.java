@@ -41,18 +41,37 @@ public class Character {
 
     private static final double Max_Speed = 5.0;
 
-    /// Accelerates the character in the direction it's currently facing.
-    public void acc() {
+    /// Adds directional vector to movement based on current rotation.
+    public void forwardMotion() {
         double angle = Math.toRadians(this.character.getRotate());
         double X = Math.cos(angle) * 0.01;
         double Y = Math.sin(angle) * 0.01;
-        Point2D acceleration = new Point2D(X, Y);
-        this.movement = this.movement.add(acceleration);
+        Point2D push = new Point2D(X, Y);
+        this.movement = this.movement.add(push);
+    }
 
+    /// Adds directional vector in the opposite direction (reverse).
+    public void backwardMotion() {
+        double angle = Math.toRadians(this.character.getRotate());
+        double X = -Math.cos(angle) * 0.01;
+        double Y = -Math.sin(angle) * 0.01;
+        Point2D reverse = new Point2D(X, Y);
+        this.movement = this.movement.add(reverse);
+    }
+
+    /// Caps the character's movement speed if it exceeds Max_Speed.
+    public void acc() {
         double speed = this.movement.magnitude();
         if (speed > Max_Speed) {
             this.movement = this.movement.normalize().multiply(Max_Speed);
         }
+    }
+
+    /// Returns a normalized Point2D representing the character's forward-facing
+    /// direction.
+    public Point2D getForwardVector() {
+        double angle = Math.toRadians(this.character.getRotate());
+        return new Point2D(Math.cos(angle), Math.sin(angle)).normalize();
     }
 
     /// Decelerates the character slightly each frame.
