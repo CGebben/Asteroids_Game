@@ -1,7 +1,6 @@
 package com.asteroids;
 
 import javafx.animation.AnimationTimer;
-import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -26,14 +25,15 @@ public class GameLoop extends AnimationTimer {
     private Stage stage;
     private Pane pane;
     private Scene endgame;
-    private InputHandler inputHandler;
-    private CollisionManager collisionManager;
+    private Inputs inputHandler;
+    private Collisions collisionManager;
     private int lives;
     private int points;
+    private Endgame endgameManager;
 
     public GameLoop(Ship ship, List<Bullet> bullets, List<Character> enemies,
             List<int[]> asteroidsToSplit, Level[] levels, Text livesText, Text text, Stage stage,
-            Pane pane, Scene endgame, InputHandler inputHandler, int lives, int points) {
+            Pane pane, Scene endgame, Inputs inputHandler, int lives, int points) {
         this.ship = ship;
         this.bullets = bullets;
         this.enemies = enemies;
@@ -44,8 +44,12 @@ public class GameLoop extends AnimationTimer {
         this.endgame = endgame;
         this.inputHandler = inputHandler;
         this.points = points;
-        this.collisionManager = new CollisionManager(ship, bullets, enemies, asteroidsToSplit, pane, livesText, text,
-                stage, endgame, new ScoreManager(), lives, points);
+        this.collisionManager = new Collisions(ship, bullets, enemies, asteroidsToSplit, pane, livesText, text,
+                stage, endgame, new Scoring(), lives, points);
+    }
+
+    public void setEndgameManager(Endgame endgameManager) {
+        this.endgameManager = endgameManager;
     }
 
     @Override
@@ -130,12 +134,7 @@ public class GameLoop extends AnimationTimer {
     private void advanceLevel() {
         System.out.println("Advancing to level " + currentLevel);
         if (currentLevel + 1 >= levels.length) {
-            pane.getChildren().remove(ship.getCharacter());
-            stage.setScene(endgame);
-            text.setText("You Win!");
-            new ScoreManager().showScoreEntry(points);
-            stop();
-            stage.close();
+            endgameManager.handleWin(points);
             return;
         }
 

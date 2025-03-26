@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * This class tracks key presses and releases to manage player input.
  */
-public class InputHandler {
+public class Inputs {
     private final Map<KeyCode, Boolean> pressedKeys = new HashMap<>();
 
     /**

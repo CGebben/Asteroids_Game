@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class CollisionManager {
+public class Collisions {
 
     private final Ship ship;
     private final List<Bullet> bullets;
@@ -20,7 +20,7 @@ public class CollisionManager {
     private final Text scoreText;
     private final Stage stage;
     private final Scene endgame;
-    private final ScoreManager scoreManager;
+    private final Scoring scoreManager;
     private int lives;
     private int points;
 
@@ -42,7 +42,7 @@ public class CollisionManager {
         asteroidsToSplit.clear();
     }
 
-    public CollisionManager(
+    public Collisions(
             Ship ship,
             List<Bullet> bullets,
             List<Character> enemies,
@@ -52,7 +52,7 @@ public class CollisionManager {
             Text scoreText,
             Stage stage,
             Scene endgame,
-            ScoreManager scoreManager,
+            Scoring scoreManager,
             int lives,
             int points) {
         this.ship = ship;
@@ -84,7 +84,7 @@ public class CollisionManager {
                 } else {
                     pane.getChildren().remove(ship.getCharacter());
                     stage.setScene(endgame);
-                    new ScoreManager().showScoreEntry(points);
+                    new Scoring().enterScore(points);
                     livesText.setText("Game Over");
                     gameOver = true;
                 }
