@@ -16,6 +16,7 @@ public class Inputs {
 
     /// Initializes key listeners on the given scene.
     public void initialize(Scene scene) {
+        System.out.println("Input handler initialized.");
         scene.setOnKeyPressed(event -> pressedKeys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> pressedKeys.put(event.getCode(), false));
     }

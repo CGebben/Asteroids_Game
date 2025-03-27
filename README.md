@@ -109,8 +109,8 @@ mvn javafx:run
 - Add Main Menu button back into win/lose menus when transition bug is resolved.
 - Create more distinct level designs beyond showcasing asteroid sizes.
 - Add a timer or mechanic for temporary invincibility display.
-- Implement life-rewarding mechanics (e.g., extra lives on score milestones).
-- Improve instruction popup layout (currently too small).
+- Implement life-rewarding mechanics, such as extra lives on score milestones.
+- Replace instruction and high score popups with in-game menu-style panels for consistency and flexibility.
 
 ## License
 

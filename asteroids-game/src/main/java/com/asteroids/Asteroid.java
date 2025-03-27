@@ -38,6 +38,8 @@ public class Asteroid extends Character {
         }
 
         this.rotationalMovement = 0.5 - rnd.nextDouble();
+
+        System.out.println("Asteroid spawned: size = " + z + ", position = (" + x + ", " + y + ")");
     }
 
     // --- Movement ---

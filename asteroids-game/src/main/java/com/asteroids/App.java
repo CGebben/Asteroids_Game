@@ -10,6 +10,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
+        System.out.println("Launching Asteroids...");
+
         // Create game pane and set size
         Pane root = new Pane();
         root.setPrefSize(Controller.Width, Controller.Height);

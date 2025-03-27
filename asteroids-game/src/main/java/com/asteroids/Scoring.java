@@ -33,6 +33,7 @@ public class Scoring {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
                 writer.write(playerName + ": " + points + "\n");
                 writer.close();
+                System.out.println("Saved score: " + playerName + " = " + points);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -44,6 +45,7 @@ public class Scoring {
         Scene scene = new Scene(root, 300, 200);
         stage.setScene(scene);
         stage.show();
+        System.out.println("Score entry popup opened.");
     }
 
     /// Opens a window displaying the contents of the high score file.
@@ -70,5 +72,6 @@ public class Scoring {
         Scene scene = new Scene(root, 300, 200);
         stage.setScene(scene);
         stage.show();
+        System.out.println("High score popup opened.");
     }
 }

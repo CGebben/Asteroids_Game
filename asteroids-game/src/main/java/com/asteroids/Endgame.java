@@ -20,9 +20,9 @@ public class Endgame {
 
     /// Handles the win condition: stops game, shows win menu, and stores score.
     public void handleWin(int points) {
-        System.out.println("Endgame.handleWin() called with points: " + points);
+        System.out.println("Endgame: Player wins with " + points + " points.");
         if (gameLoop != null) {
-            System.out.println("Stopping game loop...");
+            System.out.println("Endgame: Stopping game loop...");
             gameLoop.stop();
         }
 
@@ -33,6 +33,7 @@ public class Endgame {
 
     /// Handles the loss condition: stops game and shows lose menu.
     public void handleLose(int points) {
+        System.out.println("Endgame: Player loses with " + points + " points.");
         if (gameLoop != null) {
             gameLoop.stop();
         }

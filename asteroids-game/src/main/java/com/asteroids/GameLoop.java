@@ -35,7 +35,6 @@ public class GameLoop extends AnimationTimer {
     private Endgame endgameManager;
 
     // --- Constructor ---
-
     public GameLoop(
             Ship ship, List<Bullet> bullets, List<Character> enemies,
             List<int[]> asteroidsToSplit, Level[] levels, Text livesText, Text text,
@@ -57,14 +56,16 @@ public class GameLoop extends AnimationTimer {
         this.collisionManager = new Collisions(
                 ship, bullets, enemies, asteroidsToSplit, pane, livesText, text,
                 stage, endgame, new Scoring(), lives, points);
+
+        System.out.println("GameLoop initialized.");
     }
 
+    /// Assigns the Endgame handler used for win/lose conditions.
     public void setEndgameManager(Endgame endgameManager) {
         this.endgameManager = endgameManager;
     }
 
     // --- Main Loop ---
-
     @Override
     public void handle(long now) {
         handleInputs(now);
@@ -72,8 +73,9 @@ public class GameLoop extends AnimationTimer {
         // Move everything
         enemies.forEach(Character::move);
         bullets.forEach(Bullet::move);
-        if (!ship.isHyperspaced())
+        if (!ship.isHyperspaced()) {
             ship.move();
+        }
 
         // Check for collisions
         boolean gameOver = collisionManager.checkCollisions();
@@ -87,24 +89,28 @@ public class GameLoop extends AnimationTimer {
 
         // Move to next level if enemies are cleared
         if (enemies.isEmpty()) {
-            System.out.println("All enemies cleared, advancing level...");
+            System.out.println("GameLoop: All enemies defeated. Advancing level...");
             advanceLevel();
         }
     }
 
     // --- Input Handling ---
-
+    /// Handles key-based player input each frame.
     private void handleInputs(long now) {
         if (inputHandler.isKeyPressed(KeyCode.A)) {
             inputHandler.consumeKey(KeyCode.A);
+            System.out.println("Hyperspace activated.");
             ship.hyperspace(enemies);
             ship.addInvincibility(5);
         }
 
-        if (inputHandler.isKeyPressed(KeyCode.LEFT))
+        if (inputHandler.isKeyPressed(KeyCode.LEFT)) {
             ship.turnLeft();
-        if (inputHandler.isKeyPressed(KeyCode.RIGHT))
+        }
+
+        if (inputHandler.isKeyPressed(KeyCode.RIGHT)) {
             ship.turnRight();
+        }
 
         if (inputHandler.isKeyPressed(KeyCode.UP)) {
             if (ship.isReversing() && ship.getMovement().magnitude() > 0.1) {
@@ -135,29 +141,29 @@ public class GameLoop extends AnimationTimer {
             bullet.acc();
             pane.getChildren().add(bullet.getCharacter());
             lastUpdate = now;
+            System.out.println("Bullet fired.");
         }
     }
 
     // --- Level Progression ---
-
+    /// Moves to the next level, resets enemies, and adds invincibility.
     private void advanceLevel() {
         if (gameEnded) {
-            System.out.println("Game already ended. Skipping advanceLevel().");
+            System.out.println("GameLoop: Game already ended. Skipping level advance.");
             return;
         }
 
-        System.out
-                .println("advanceLevel() called. currentLevel: " + currentLevel + ", levels.length: " + levels.length);
+        System.out.println("Advancing from level " + currentLevel + " of " + (levels.length - 1));
 
         if (currentLevel >= levels.length - 1) {
-            System.out.println("Final level reached. Triggering win.");
+            System.out.println("GameLoop: Final level completed. Triggering win.");
             gameEnded = true;
             endgameManager.handleWin(points);
             return;
         }
 
         currentLevel++;
-        System.out.println("Now on level " + currentLevel);
+        System.out.println("GameLoop: Now on level " + currentLevel);
 
         bullets.forEach(b -> pane.getChildren().remove(b.getCharacter()));
         bullets.clear();

@@ -22,7 +22,6 @@ public class Menus {
     private int finalScore = 0;
 
     // --- Constructor ---
-
     public Menus(
             Pane root,
             Scoring scoreManager,
@@ -42,6 +41,7 @@ public class Menus {
 
         root.getChildren().addAll(mainMenu, winMenu, loseMenu);
         showMainMenu();
+        System.out.println("Menus initialized and main menu shown.");
     }
 
     // --- Menu Creation ---
@@ -109,7 +109,10 @@ public class Menus {
 
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: white; -fx-text-fill: black;"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: white;"));
-        button.setOnAction(e -> action.run());
+        button.setOnAction(e -> {
+            System.out.println("Button pressed: " + text);
+            action.run();
+        });
 
         return button;
     }
@@ -117,19 +120,21 @@ public class Menus {
     // --- Menu Visibility Control ---
 
     public void showMainMenu() {
+        System.out.println("Showing Main Menu");
         mainMenu.setVisible(true);
         winMenu.setVisible(false);
         loseMenu.setVisible(false);
     }
 
     public void showWinMenu() {
-        System.out.println("Menus.showWinMenu() called");
+        System.out.println("Showing Win Menu");
         mainMenu.setVisible(false);
         winMenu.setVisible(true);
         loseMenu.setVisible(false);
     }
 
     public void showLoseMenu() {
+        System.out.println("Showing Lose Menu");
         mainMenu.setVisible(false);
         winMenu.setVisible(false);
         loseMenu.setVisible(true);
@@ -145,6 +150,7 @@ public class Menus {
 
     public void setFinalScore(int points) {
         this.finalScore = points;
+        System.out.println("Final score recorded: " + points);
     }
 
     public Pane getRoot() {

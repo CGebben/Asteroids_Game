@@ -42,7 +42,6 @@ public class Controller {
     private static Timeline timeline = new Timeline();
 
     // --- Constructor ---
-
     public Controller(Pane pane, Stage stage, Scene scene) {
         this.pane = pane;
         this.stage = stage;
@@ -53,6 +52,7 @@ public class Controller {
 
     /// Initializes and displays all menus.
     public void setupMenus() {
+        System.out.println("Setting up main menu...");
         menus = new Menus(
                 pane,
                 scoring,
@@ -64,6 +64,7 @@ public class Controller {
                 Platform::exit);
     }
 
+    /// Links Endgame to GameLoop.
     public void setEndgameManager(Endgame endgameManager) {
         System.out.println("Setting endgameManager in GameLoop...");
         if (gameLoop != null) {
@@ -76,24 +77,28 @@ public class Controller {
     // --- Game Flow Methods ---
 
     public void showHighScores() {
+        System.out.println("Showing high scores...");
         scoring.showHighScores();
     }
 
     public void showInstructions() {
+        System.out.println("Showing instructions...");
         Instructions.showInstructions();
     }
 
     public void playAgain() {
+        System.out.println("Restarting game...");
         startGame();
     }
 
     public void returnToMainMenu() {
-        System.out.println("Controller.returnToMainMenu() called");
+        System.out.println("Returning to main menu...");
         menus.showMainMenu();
     }
 
     /// Starts a new game session from scratch.
     public void startGame() {
+        System.out.println("Starting new game...");
         bullets.clear();
         enemies.clear();
         asteroidsToSplit.clear();

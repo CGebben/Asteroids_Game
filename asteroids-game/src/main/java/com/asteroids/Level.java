@@ -21,6 +21,7 @@ public class Level {
 
     /// Creates an array of predefined levels with increasing difficulty.
     public static Level[] createLevels() {
+        System.out.println("Creating predefined levels...");
         return new Level[] {
                 new Level(1, 1, 0, 0),
                 new Level(2, 0, 1, 0),
@@ -39,17 +40,17 @@ public class Level {
 
         this.enemyList = new ArrayList<>();
 
-        // Generate and place size 1 asteroids
+        System.out.println("Level " + levelNumber + " created:");
+        System.out.println(" - Size 1 Asteroids: " + numSize1Asteroids);
+        System.out.println(" - Size 2 Asteroids: " + numSize2Asteroids);
+        System.out.println(" - Size 3 Asteroids: " + numSize3Asteroids);
+
         for (int i = 0; i < numSize1Asteroids; i++) {
             enemyList.add(new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 1));
         }
-
-        // Generate and place size 2 asteroids
         for (int i = 0; i < numSize2Asteroids; i++) {
             enemyList.add(new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 2));
         }
-
-        // Generate and place size 3 asteroids
         for (int i = 0; i < numSize3Asteroids; i++) {
             enemyList.add(new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 3));
         }
@@ -57,7 +58,6 @@ public class Level {
 
     // --- Accessors ---
 
-    /// Returns the list of enemy characters for this level.
     public List<Character> getEnemyList() {
         return enemyList;
     }

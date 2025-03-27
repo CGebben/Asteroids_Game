@@ -18,6 +18,7 @@ public class Ship extends Character {
     // --- Constructor ---
     public Ship(int x, int y) {
         super(new Polygon(0, 0, 100, 25, 0, 50, 25, 25), x, y);
+        System.out.println("Ship spawned at (" + x + ", " + y + ")");
     }
 
     // --- Invincibility ---
@@ -35,6 +36,7 @@ public class Ship extends Character {
     /// Temporarily makes the ship invincible and plays a blink animation.
     public void addInvincibility(int seconds) {
         this.setInvincible(true);
+        System.out.println("Ship is now invincible for " + seconds + " seconds.");
 
         Timeline blinkTimeline = new Timeline(new KeyFrame(Duration.millis(150), e -> {
             Polygon shape = this.getCharacter();
@@ -46,6 +48,7 @@ public class Ship extends Character {
         Timeline endTimeline = new Timeline(new KeyFrame(Duration.seconds(seconds), e -> {
             this.setInvincible(false);
             this.getCharacter().setOpacity(1.0);
+            System.out.println("Ship invincibility ended.");
         }));
 
         blinkTimeline.play();
@@ -78,6 +81,7 @@ public class Ship extends Character {
         super.getCharacter().setTranslateX(newX);
         super.getCharacter().setTranslateY(newY);
         super.setMovement(0, 0);
+        System.out.println("Ship teleported to (" + (int) newX + ", " + (int) newY + ")");
     }
 
     /// Triggers the hyperspace effect (teleport).

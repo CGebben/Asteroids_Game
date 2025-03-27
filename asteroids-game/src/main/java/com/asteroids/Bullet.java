@@ -8,6 +8,7 @@ public class Bullet extends Character {
     // --- Constructor ---
     public Bullet(int x, int y) {
         super(new Polygon(5, -5, 5, 5, -5, 5, -5, -5), x + 50, y + 30);
+        System.out.println("Bullet created at (" + (x + 50) + ", " + (y + 30) + ")");
     }
 
     // --- Overrides ---

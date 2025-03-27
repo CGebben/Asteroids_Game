@@ -30,7 +30,6 @@ public class Collisions {
     private int points;
 
     // --- Constructor ---
-
     public Collisions(
             Ship ship,
             List<Bullet> bullets,
@@ -72,11 +71,13 @@ public class Collisions {
             Character enemy = enemyIterator.next();
             if (enemy.collide(ship) && !ship.isInvincible()) {
                 lives--;
+                System.out.println("Player collided with enemy. Lives remaining: " + lives);
                 livesText.setText("Lives: " + lives);
                 if (lives > 0) {
                     ship.hyperspace(enemies);
                     ship.addInvincibility(5);
                 } else {
+                    System.out.println("Player has died. Game over triggered.");
                     pane.getChildren().remove(ship.getCharacter());
                     gameOver = true;
                 }
@@ -90,16 +91,18 @@ public class Collisions {
         for (Bullet bullet : bullets) {
             for (Character enemy : new ArrayList<>(enemies)) {
                 if (enemy.collide(bullet)) {
-                    if (enemy.getSize() == 1) {
+                    int size = enemy.getSize();
+                    if (size == 1) {
                         points += 10;
-                    } else if (enemy.getSize() == 2 || enemy.getSize() == 3) {
+                    } else if (size == 2 || size == 3) {
                         points += 30;
                         double X = enemy.getCharacter().getTranslateX();
                         double Y = enemy.getCharacter().getTranslateY();
-                        int Z = enemy.getSize();
-                        asteroidsToSplit.add(new int[] { (int) X, (int) Y, Z - 1 });
+                        asteroidsToSplit.add(new int[] { (int) X, (int) Y, size - 1 });
+                        System.out.println("Asteroid of size " + size + " hit. Splitting.");
                     }
 
+                    System.out.println("Enemy destroyed. Score: " + points);
                     scoreText.setText("Points: " + points);
                     bulletsToRemove.add(bullet);
                     enemiesToRemove.add(enemy);
@@ -136,16 +139,17 @@ public class Collisions {
 
             enemies.add(asteroid1);
             enemies.add(asteroid2);
-
             pane.getChildren().add(asteroid1.getCharacter());
             pane.getChildren().add(asteroid2.getCharacter());
+
+            System.out.println("Created 2 new asteroids of size " + size);
         }
+
         asteroidsToSplit.clear();
     }
 
     // --- Accessors ---
 
-    /// Returns a fresh copy of the list of asteroid splits queued.
     public List<int[]> getNewAsteroids() {
         return new ArrayList<>(asteroidsToSplit);
     }
