@@ -30,6 +30,7 @@ public class GameLoop extends AnimationTimer {
     private int lives;
     private int points;
     private Endgame endgameManager;
+    private boolean gameEnded = false;
 
     public GameLoop(Ship ship, List<Bullet> bullets, List<Character> enemies,
             List<int[]> asteroidsToSplit, Level[] levels, Text livesText, Text text, Stage stage,
@@ -117,9 +118,9 @@ public class GameLoop extends AnimationTimer {
         // Handle Collisions
 
         boolean gameOver = collisionManager.checkCollisions();
-        if (gameOver) {
-            stop();
-            stage.close();
+        if (gameOver && !gameEnded) {
+            gameEnded = true;
+            endgameManager.handleLose(collisionManager.getPoints());
             return;
         }
 
@@ -127,30 +128,40 @@ public class GameLoop extends AnimationTimer {
 
         // Level Progression
         if (enemies.isEmpty()) {
+            System.out.println("All enemies cleared, advancing level...");
             advanceLevel();
         }
     }
 
     private void advanceLevel() {
-        System.out.println("Advancing to level " + currentLevel);
-        if (currentLevel + 1 >= levels.length) {
+        if (gameEnded) {
+            System.out.println("Game already ended. Skipping advanceLevel().");
+            return;
+        }
+
+        System.out
+                .println("advanceLevel() called. currentLevel: " + currentLevel + ", levels.length: " + levels.length);
+
+        if (currentLevel >= levels.length - 1) {
+            System.out.println("Final level reached. Triggering win.");
+            gameEnded = true;
             endgameManager.handleWin(points);
             return;
         }
 
-        currentLevel++; // Move increment down here
-        System.out.println("Advancing to level " + currentLevel);
+        currentLevel++;
+        System.out.println("Now on level " + currentLevel);
 
         bullets.forEach(bullet -> pane.getChildren().remove(bullet.getCharacter()));
         bullets.clear();
 
         enemies.clear();
-        enemies.clear();
         enemies.addAll(levels[currentLevel].getEnemyList());
+
         System.out.println("Enemies after loading new level: " + enemies.size());
+
         enemies.forEach(enemy -> pane.getChildren().add(enemy.getCharacter()));
 
-        // Spawn ship in a safe location and give invincibility
         ship.hyperspace(enemies);
         ship.addInvincibility(5);
     }

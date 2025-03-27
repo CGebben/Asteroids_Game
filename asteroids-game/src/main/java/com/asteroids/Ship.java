@@ -1,7 +1,6 @@
 package com.asteroids;
 
 import java.util.List;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.shape.Polygon;
@@ -10,42 +9,52 @@ import javafx.util.Duration;
 
 /// Represents the player’s ship. Handles movement, hyperspace, and invincibility.
 public class Ship extends Character {
+
+    // --- Fields ---
     private boolean isInvincible = false;
     private boolean isHyperspaced = false;
+    private boolean reversing = false;
 
+    // --- Constructor ---
     public Ship(int x, int y) {
         super(new Polygon(0, 0, 100, 25, 0, 50, 25, 25), x, y);
     }
 
+    // --- Invincibility ---
+
+    /// Sets whether the ship is invincible.
     public void setInvincible(boolean invincible) {
         this.isInvincible = invincible;
     }
 
+    /// Returns whether the ship is currently invincible.
     public boolean isInvincible() {
         return isInvincible;
     }
 
+    /// Temporarily makes the ship invincible and plays a blink animation.
     public void addInvincibility(int seconds) {
         this.setInvincible(true);
 
         Timeline blinkTimeline = new Timeline(new KeyFrame(Duration.millis(150), e -> {
-            // Toggle visibility
             Polygon shape = this.getCharacter();
             shape.setOpacity(shape.getOpacity() == 1 ? 0.3 : 1.0);
         }));
 
-        blinkTimeline.setCycleCount((seconds * 1000) / 250); // Run for duration
+        blinkTimeline.setCycleCount((seconds * 1000) / 250);
 
         Timeline endTimeline = new Timeline(new KeyFrame(Duration.seconds(seconds), e -> {
             this.setInvincible(false);
-            this.getCharacter().setOpacity(1.0); // Ensure it stays visible
+            this.getCharacter().setOpacity(1.0);
         }));
 
         blinkTimeline.play();
         endTimeline.play();
     }
 
-    /// Moves the ship to a random location away from nearby enemies.
+    // --- Hyperspace ---
+
+    /// Teleports the ship to a safe random location.
     private void teleport(List<Character> enemies) {
         double newX, newY;
         boolean collision;
@@ -71,15 +80,11 @@ public class Ship extends Character {
         super.setMovement(0, 0);
     }
 
+    /// Triggers the hyperspace effect (teleport).
     public void hyperspace(List<Character> enemies) {
         this.setHyperspaced(true);
         teleport(enemies);
         this.setHyperspaced(false);
-    }
-
-    public boolean collide(Character other) {
-        Shape collisionArea = Shape.intersect(super.getCharacter(), other.getCharacter());
-        return collisionArea.getBoundsInLocal().getWidth() != -1;
     }
 
     public boolean isHyperspaced() {
@@ -87,10 +92,10 @@ public class Ship extends Character {
     }
 
     public void setHyperspaced(boolean hyperspaced) {
-        isHyperspaced = hyperspaced;
+        this.isHyperspaced = hyperspaced;
     }
 
-    private boolean reversing = false;
+    // --- Reversing State ---
 
     public void setReversing(boolean reversing) {
         this.reversing = reversing;
@@ -98,5 +103,13 @@ public class Ship extends Character {
 
     public boolean isReversing() {
         return this.reversing;
+    }
+
+    // --- Collision ---
+
+    /// Checks collision with another character.
+    public boolean collide(Character other) {
+        Shape collisionArea = Shape.intersect(super.getCharacter(), other.getCharacter());
+        return collisionArea.getBoundsInLocal().getWidth() != -1;
     }
 }

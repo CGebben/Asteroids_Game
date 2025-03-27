@@ -36,8 +36,11 @@ public class Controller {
     }
 
     public void setEndgameManager(Endgame endgameManager) {
+        System.out.println("Setting endgameManager in GameLoop...");
         if (gameLoop != null) {
             gameLoop.setEndgameManager(endgameManager);
+        } else {
+            System.out.println("Warning: gameLoop is null!");
         }
     }
 
@@ -83,7 +86,8 @@ public class Controller {
     }
 
     public void returnToMainMenu() {
-        pane.getChildren().clear(); // or however you want to reset the screen
+        System.out.println("Controller.returnToMainMenu() called");
+        menus.showMainMenu(); // this will handle hiding others & showing the main menu
     }
 
     /// Initializes the game when the "New Game" button is pressed.
@@ -120,5 +124,8 @@ public class Controller {
                 ship, bullets, enemies, asteroidsToSplit,
                 levels, livesText, text, stage, pane, scene, inputs, lives, points);
         gameLoop.start();
+
+        Endgame endgame = new Endgame(stage, menus, scoring, gameLoop);
+        gameLoop.setEndgameManager(endgame);
     }
 }

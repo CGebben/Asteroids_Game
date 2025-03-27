@@ -29,13 +29,9 @@ public class Level {
      * Return an array containing predefined Level objects.
      */
     public static Level[] createLevels() {
-        Level[] levels = new Level[5];
-
-        levels[0] = new Level(1, 2, 0, 0);
-        levels[1] = new Level(2, 2, 1, 0);
-        levels[2] = new Level(3, 2, 1, 1);
-
-        return levels;
+        return new Level[] {
+                new Level(1, 1, 0, 0)
+        };
     }
 
     /**

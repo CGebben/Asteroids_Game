@@ -1,17 +1,22 @@
 package com.asteroids;
 
-// Import necessary JavaFX classes for positioning and collision detection.
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
-/// Represents a character in the game, including the player’s ship and enemies.
-/// Provides movement, rotation, and collision detection functionality.
+/// Represents a character in the game (e.g., ship, asteroid).
+/// Provides movement, rotation, speed control, and collision detection.
 public class Character {
-    private int size;
+
+    // --- Fields ---
+    protected int size;
     private Point2D movement;
     private Polygon character;
 
+    // --- Constants ---
+    private static final double Max_Speed = 5.0;
+
+    // --- Constructor ---
     public Character(Polygon shape, int x, int y) {
         this.character = shape;
         this.character.setTranslateX(x);
@@ -19,6 +24,7 @@ public class Character {
         this.movement = new Point2D(0, 0);
     }
 
+    // --- Public Accessors ---
     public Polygon getCharacter() {
         return this.character;
     }
@@ -27,6 +33,11 @@ public class Character {
         return this.movement;
     }
 
+    public int getSize() {
+        return this.size;
+    }
+
+    // --- Movement Control ---
     public void setMovement(double x, double y) {
         this.movement = this.movement.add(x, y);
     }
@@ -39,48 +50,31 @@ public class Character {
         this.character.setRotate(this.character.getRotate() - 1);
     }
 
-    private static final double Max_Speed = 5.0;
-
-    /// Adds directional vector to movement based on current rotation.
     public void forwardMotion() {
         double angle = Math.toRadians(this.character.getRotate());
-        double X = Math.cos(angle) * 0.01;
-        double Y = Math.sin(angle) * 0.01;
-        Point2D push = new Point2D(X, Y);
+        Point2D push = new Point2D(Math.cos(angle), Math.sin(angle)).multiply(0.01);
         this.movement = this.movement.add(push);
     }
 
-    /// Adds directional vector in the opposite direction (reverse).
     public void backwardMotion() {
         double angle = Math.toRadians(this.character.getRotate());
-        double X = -Math.cos(angle) * 0.01;
-        double Y = -Math.sin(angle) * 0.01;
-        Point2D reverse = new Point2D(X, Y);
+        Point2D reverse = new Point2D(-Math.cos(angle), -Math.sin(angle)).multiply(0.01);
         this.movement = this.movement.add(reverse);
     }
 
-    /// Caps the character's movement speed if it exceeds Max_Speed.
+    // --- Speed Control ---
+
     public void acc() {
-        double speed = this.movement.magnitude();
-        if (speed > Max_Speed) {
+        if (this.movement.magnitude() > Max_Speed) {
             this.movement = this.movement.normalize().multiply(Max_Speed);
         }
     }
 
-    /// Returns a normalized Point2D representing the character's forward-facing
-    /// direction.
-    public Point2D getForwardVector() {
-        double angle = Math.toRadians(this.character.getRotate());
-        return new Point2D(Math.cos(angle), Math.sin(angle)).normalize();
-    }
-
-    /// Decelerates the character slightly each frame.
     public void dec() {
-        double decelerationRate = 0.98;
-        this.movement = this.movement.multiply(decelerationRate);
+        this.movement = this.movement.multiply(0.98);
     }
 
-    /// Moves the character and wraps around screen edges.
+    // --- Movement Execution ---
     public void move() {
         this.character.setTranslateX(this.character.getTranslateX() + this.movement.getX());
         this.character.setTranslateY(this.character.getTranslateY() + this.movement.getY());
@@ -99,13 +93,15 @@ public class Character {
         }
     }
 
-    /// Checks collision with another character using shape intersection.
-    public boolean collide(Character other) {
-        Shape collisionArea = Shape.intersect(this.getCharacter(), other.getCharacter());
-        return collisionArea.getBoundsInLocal().getWidth() != -1;
+    // --- Utilities ---
+    public Point2D getForwardVector() {
+        double angle = Math.toRadians(this.character.getRotate());
+        return new Point2D(Math.cos(angle), Math.sin(angle)).normalize();
     }
 
-    public int getSize() {
-        return this.size;
+    // --- Collision ---
+    public boolean collide(Character other) {
+        Shape collisionArea = Shape.intersect(this.character, other.getCharacter());
+        return collisionArea.getBoundsInLocal().getWidth() != -1;
     }
 }

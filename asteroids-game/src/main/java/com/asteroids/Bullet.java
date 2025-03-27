@@ -1,21 +1,25 @@
 package com.asteroids;
 
-// Import JavaFX Polygon class for defining the bullet shape.
 import javafx.scene.shape.Polygon;
 
 /// Represents a bullet fired by the player's ship.
 public class Bullet extends Character {
 
+    // --- Constructor ---
     public Bullet(int x, int y) {
         super(new Polygon(5, -5, 5, 5, -5, 5, -5, -5), x + 50, y + 30);
     }
 
+    // --- Overrides ---
+
+    /// Moves the bullet in a straight line (no screen wrapping).
     @Override
     public void move() {
         super.getCharacter().setTranslateX(super.getCharacter().getTranslateX() + super.getMovement().getX());
         super.getCharacter().setTranslateY(super.getCharacter().getTranslateY() + super.getMovement().getY());
     }
 
+    /// Accelerates the bullet in the direction it's facing (fires it forward).
     @Override
     public void acc() {
         super.acc();

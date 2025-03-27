@@ -18,9 +18,9 @@ public class Menus {
     public Menus(Pane root, Scoring scoreManager, Runnable onStart, Runnable onHighScores, Runnable onInstructions,
             Runnable onPlayAgain, Runnable onMainMenu, Runnable onQuit) {
         this.root = root;
-        this.mainMenu = createMainMenu(onStart, onHighScores, onInstructions);
-        this.winMenu = createWinMenu(onPlayAgain, onMainMenu, onQuit);
-        this.loseMenu = createLoseMenu(onPlayAgain, onMainMenu, onQuit);
+        this.mainMenu = createMainMenu(onStart, onHighScores, onInstructions, onQuit);
+        this.winMenu = createWinMenu(onPlayAgain, onQuit);
+        this.loseMenu = createLoseMenu(onPlayAgain, onQuit);
         this.scoreManager = scoreManager;
 
         this.root.getChildren().addAll(mainMenu, winMenu, loseMenu);
@@ -29,7 +29,7 @@ public class Menus {
         showMainMenu();
     }
 
-    private VBox createMainMenu(Runnable onStart, Runnable onHighScores, Runnable onInstructions) {
+    private VBox createMainMenu(Runnable onStart, Runnable onHighScores, Runnable onInstructions, Runnable onQuit) {
         VBox menu = new VBox(20);
         menu.setAlignment(Pos.CENTER);
         menu.setPrefSize(Controller.Width, Controller.Height);
@@ -42,34 +42,31 @@ public class Menus {
         Button startButton = createButton("START", onStart);
         Button scoreButton = createButton("SCOREBOARD", onHighScores);
         Button howToButton = createButton("HOW TO PLAY", onInstructions);
+        Button quitButton = createButton("QUIT", onQuit);
 
-        menu.getChildren().addAll(title, startButton, scoreButton, howToButton);
+        menu.getChildren().addAll(title, startButton, scoreButton, howToButton, quitButton);
         return menu;
     }
 
-    private VBox createWinMenu(Runnable onPlayAgain, Runnable onMainMenu, Runnable onQuit) {
+    private VBox createWinMenu(Runnable onPlayAgain, Runnable onQuit) {
         VBox menu = new VBox(20);
         menu.setAlignment(Pos.CENTER);
         menu.setPrefSize(Controller.Width, Controller.Height);
-        menu.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);"); // Slightly transparent
+        menu.setStyle("-fx-background-color: black;"); // Slightly transparent
 
         Text winText = new Text("YOU WIN!");
         winText.setFont(Font.font("System", 48));
         winText.setFill(Color.WHITE);
 
-        Button enterScoreButton = createButton("ENTER SCORE", () -> {
-            scoreManager.enterScore(finalScore);
-        });
-
+        Button enterScoreButton = createButton("ENTER SCORE", () -> scoreManager.enterScore(finalScore));
         Button playAgainButton = createButton("PLAY AGAIN", onPlayAgain);
-        Button mainMenuButton = createButton("MAIN MENU", onMainMenu);
         Button quitButton = createButton("QUIT", onQuit);
 
-        menu.getChildren().addAll(winText, enterScoreButton, playAgainButton, mainMenuButton, quitButton);
+        menu.getChildren().addAll(winText, enterScoreButton, playAgainButton, quitButton);
         return menu;
     }
 
-    private VBox createLoseMenu(Runnable onPlayAgain, Runnable onMainMenu, Runnable onQuit) {
+    private VBox createLoseMenu(Runnable onPlayAgain, Runnable onQuit) {
         VBox menu = new VBox(20);
         menu.setAlignment(Pos.CENTER);
         menu.setPrefSize(Controller.Width, Controller.Height);
@@ -80,10 +77,9 @@ public class Menus {
         loseText.setFill(Color.WHITE);
 
         Button playAgainButton = createButton("TRY AGAIN", onPlayAgain);
-        Button mainMenuButton = createButton("MAIN MENU", onMainMenu);
         Button quitButton = createButton("QUIT", onQuit);
 
-        menu.getChildren().addAll(loseText, playAgainButton, mainMenuButton, quitButton);
+        menu.getChildren().addAll(loseText, playAgainButton, quitButton);
         return menu;
     }
 
@@ -94,9 +90,11 @@ public class Menus {
     }
 
     public void showWinMenu() {
+        System.out.println("Menus.showWinMenu() called");
         mainMenu.setVisible(false);
         winMenu.setVisible(true);
         loseMenu.setVisible(false);
+        System.out.println("Menus.showMainMenu() called");
     }
 
     public void showLoseMenu() {
@@ -129,5 +127,17 @@ public class Menus {
 
     public void setFinalScore(int points) {
         this.finalScore = points;
+    }
+
+    public Pane getRoot() {
+        return root;
+    }
+
+    public VBox getWinMenu() {
+        return winMenu;
+    }
+
+    public VBox getLoseMenu() {
+        return loseMenu;
     }
 }

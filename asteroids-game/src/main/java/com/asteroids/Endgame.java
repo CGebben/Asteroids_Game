@@ -17,17 +17,25 @@ public class Endgame {
     }
 
     public void handleWin(int points) {
+        System.out.println("Endgame.handleWin() called with points: " + points);
         if (gameLoop != null) {
+            System.out.println("Stopping game loop...");
             gameLoop.stop();
         }
+
+        // Re-add and show only the win menu
         menuManager.setFinalScore(points);
         menuManager.showWinMenu();
+        menuManager.getRoot().getChildren().add(menuManager.getWinMenu());
     }
 
     public void handleLose(int points) {
         if (gameLoop != null) {
             gameLoop.stop();
         }
+        menuManager.setFinalScore(points); // reuse same method
+        menuManager.getRoot().getChildren().clear();
         menuManager.showLoseMenu();
+        menuManager.getRoot().getChildren().add(menuManager.getLoseMenu());
     }
 }

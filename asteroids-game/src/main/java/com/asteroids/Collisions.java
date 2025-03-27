@@ -83,9 +83,6 @@ public class Collisions {
                     ship.addInvincibility(5);
                 } else {
                     pane.getChildren().remove(ship.getCharacter());
-                    stage.setScene(endgame);
-                    new Scoring().enterScore(points);
-                    livesText.setText("Game Over");
                     gameOver = true;
                 }
             }
