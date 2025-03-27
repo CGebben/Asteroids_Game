@@ -9,13 +9,11 @@ import javafx.stage.Stage;
 
 import java.io.*;
 
+/// Handles saving and displaying high scores.
+/// Scores are stored in a text file located in `game-data/highscores.txt`.
 public class Scoring {
 
-    /**
-     * Opens a pop-up window to enter a name and saves the score to a file.
-     *
-     * 'points' The player's score to save.
-     */
+    /// Opens a window to enter a player's name and save the score to file.
     public void enterScore(int points) {
         VBox root = new VBox();
         root.setStyle("-fx-background-color: black;");
@@ -30,7 +28,7 @@ public class Scoring {
             String playerName = name.getText();
             try {
                 File file = new File("game-data/highscores.txt");
-                file.getParentFile().mkdirs(); // Ensure game-data exists
+                file.getParentFile().mkdirs(); // Ensure directory exists
 
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
                 writer.write(playerName + ": " + points + "\n");
@@ -48,6 +46,7 @@ public class Scoring {
         stage.show();
     }
 
+    /// Opens a window displaying the contents of the high score file.
     public void showHighScores() {
         VBox root = new VBox();
         root.setStyle("-fx-background-color: black;");

@@ -1,6 +1,5 @@
 package com.asteroids;
 
-// Import JavaFX libraries for UI components, animations, and event handling.
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -12,11 +11,47 @@ import javafx.stage.Stage;
 
 import java.util.*;
 
+/// Manages game lifecycle, UI interaction, and game object creation.
 public class Controller {
 
-    private Menus menus;
-    private Scoring scoring = new Scoring(); // one instance reused
+    // --- Constants ---
+    public static int Width = 1280;
+    public static int Height = 720;
 
+    // --- Fields ---
+    private final Pane pane;
+    private final Stage stage;
+    private final Scene scene;
+    private final Inputs inputs = new Inputs();
+    private final Scoring scoring = new Scoring();
+
+    private GameLoop gameLoop;
+    private Menus menus;
+
+    private int points = 0;
+    private int lives = 3;
+
+    private List<Bullet> bullets = new ArrayList<>();
+    private List<Character> enemies = new ArrayList<>();
+    private List<int[]> asteroidsToSplit = new ArrayList<>();
+
+    private Pane end_pane = new Pane();
+    private double Rotation = 0;
+
+    private static Ship ship = new Ship(Width / 3, Height / 3);
+    private static Timeline timeline = new Timeline();
+
+    // --- Constructor ---
+
+    public Controller(Pane pane, Stage stage, Scene scene) {
+        this.pane = pane;
+        this.stage = stage;
+        this.scene = scene;
+    }
+
+    // --- Setup ---
+
+    /// Initializes and displays all menus.
     public void setupMenus() {
         menus = new Menus(
                 pane,
@@ -29,12 +64,6 @@ public class Controller {
                 Platform::exit);
     }
 
-    public Controller(Pane pane, Stage stage, Scene scene) {
-        this.pane = pane;
-        this.stage = stage;
-        this.scene = scene;
-    }
-
     public void setEndgameManager(Endgame endgameManager) {
         System.out.println("Setting endgameManager in GameLoop...");
         if (gameLoop != null) {
@@ -44,34 +73,7 @@ public class Controller {
         }
     }
 
-    // Game screen dimensions.
-    public static int Width = 1280;
-    public static int Height = 720;
-
-    private Pane pane;
-    private Stage stage;
-    private Scene scene;
-    private GameLoop gameLoop;
-    private Inputs inputs = new Inputs();
-
-    // Player stats.
-    public int points = 0;
-    public int lives = 3;
-
-    // Lists for tracking bullets, enemies, and asteroids.
-    List<Bullet> bullets = new ArrayList<>();
-    List<Character> enemies = new ArrayList<>();
-    List<int[]> asteroidsToSplit = new ArrayList<>();
-
-    // Game UI components.
-    Pane end_pane = new Pane();
-    double Rotation = 0;
-
-    // Main player-controlled ship.
-    static Ship ship = new Ship(Width / 3, Height / 3);
-
-    // Timeline for managing timed events.
-    static Timeline timeline = new Timeline();
+    // --- Game Flow Methods ---
 
     public void showHighScores() {
         scoring.showHighScores();
@@ -87,11 +89,10 @@ public class Controller {
 
     public void returnToMainMenu() {
         System.out.println("Controller.returnToMainMenu() called");
-        menus.showMainMenu(); // this will handle hiding others & showing the main menu
+        menus.showMainMenu();
     }
 
-    /// Initializes the game when the "New Game" button is pressed.
-    /// Sets up the game screen, spawns enemies, and starts the animation loop.
+    /// Starts a new game session from scratch.
     public void startGame() {
         bullets.clear();
         enemies.clear();
@@ -104,10 +105,10 @@ public class Controller {
         pane.getChildren().add(ship.getCharacter());
         ship.addInvincibility(5);
 
-        Text text = new Text(10, 40, "Points: " + points);
-        text.setFont(Font.font("System", 36));
-        text.setFill(Color.BLACK);
-        pane.getChildren().add(text);
+        Text scoreText = new Text(10, 40, "Points: " + points);
+        scoreText.setFont(Font.font("System", 36));
+        scoreText.setFill(Color.BLACK);
+        pane.getChildren().add(scoreText);
 
         Text livesText = new Text(10, 80, "Lives: " + lives);
         livesText.setFont(Font.font("System", 36));
@@ -116,13 +117,13 @@ public class Controller {
 
         Level[] levels = Level.createLevels();
         enemies = levels[0].getEnemyList();
-        enemies.forEach(enemy -> pane.getChildren().add(enemy.getCharacter()));
+        enemies.forEach(e -> pane.getChildren().add(e.getCharacter()));
 
         inputs.initialize(scene);
 
-        this.gameLoop = new GameLoop(
+        gameLoop = new GameLoop(
                 ship, bullets, enemies, asteroidsToSplit,
-                levels, livesText, text, stage, pane, scene, inputs, lives, points);
+                levels, livesText, scoreText, stage, pane, scene, inputs, lives, points);
         gameLoop.start();
 
         Endgame endgame = new Endgame(stage, menus, scoring, gameLoop);

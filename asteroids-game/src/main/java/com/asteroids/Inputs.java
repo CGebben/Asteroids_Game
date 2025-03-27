@@ -5,33 +5,29 @@ import javafx.scene.input.KeyCode;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * This class tracks key presses and releases to manage player input.
- */
+/// Tracks keyboard input by monitoring key press and release events.
+/// Used to handle player controls during gameplay.
 public class Inputs {
+
+    // --- Fields ---
     private final Map<KeyCode, Boolean> pressedKeys = new HashMap<>();
 
-    /**
-     * Sets up input tracking for the game.
-     * The scene listens for key presses and releases.
-     */
+    // --- Setup ---
+
+    /// Initializes key listeners on the given scene.
     public void initialize(Scene scene) {
         scene.setOnKeyPressed(event -> pressedKeys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> pressedKeys.put(event.getCode(), false));
     }
 
-    /**
-     * Checks if a specific key is currently being pressed.
-     * Returns true if the key is pressed, false otherwise.
-     */
+    // --- Input Queries ---
+
+    /// Returns true if the given key is currently pressed.
     public boolean isKeyPressed(KeyCode key) {
         return pressedKeys.getOrDefault(key, false);
     }
 
-    /**
-     * Removes a key from active tracking.
-     * Useful for actions that should trigger once per press, such as hyperspace.
-     */
+    /// Removes the key from tracking (useful for single-trigger actions).
     public void consumeKey(KeyCode key) {
         pressedKeys.remove(key);
     }

@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 
 import java.io.*;
 
+/// Displays the contents of an instructions file in a pop-up window.
+/// Text is wrapped manually to improve readability.
+///
+/// NOTE: The window size and layout still need to be adjusted for better UX.
 public class Instructions {
 
     public static void showInstructions() {

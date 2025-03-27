@@ -4,41 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * The Level class defines enemy configurations for different game levels.
- * It determines the number of asteroids and aliens present in a given level.
- */
+/// Defines enemy configurations for different game levels.
+/// Each level specifies a number of asteroids of varying sizes.
 public class Level {
-    private int levelNumber;
 
-    // Number of different types of enemies per level.
+    // --- Fields ---
+    private int levelNumber;
     private int numSize1Asteroids;
     private int numSize2Asteroids;
     private int numSize3Asteroids;
 
-    // List to store enemies (asteroids and aliens).
-    private List<Character> enemyList;
+    private final List<Character> enemyList;
+    private final Random rnd = new Random();
 
-    // Random number generator for enemy placement.
-    private Random rnd = new Random();
+    // --- Static Utility ---
 
-    /**
-     * Creates an array of Level objects, each defining different enemy setups.
-     * The difficulty increases with each level.
-     * 
-     * Return an array containing predefined Level objects.
-     */
+    /// Creates an array of predefined levels with increasing difficulty.
     public static Level[] createLevels() {
         return new Level[] {
-                new Level(1, 1, 0, 0)
+                new Level(1, 1, 0, 0),
+                new Level(2, 0, 1, 0),
+                new Level(3, 0, 0, 1)
         };
     }
 
-    /**
-     * Constructs a Level with a specified number of asteroids and aliens.
-     * Generates enemy objects and adds them to the enemy list.
-     **/
+    // --- Constructor ---
 
+    /// Constructs a level with a specific number of asteroids.
     public Level(int levelNumber, int numSize1Asteroids, int numSize2Asteroids, int numSize3Asteroids) {
         this.levelNumber = levelNumber;
         this.numSize1Asteroids = numSize1Asteroids;
@@ -47,29 +39,29 @@ public class Level {
 
         this.enemyList = new ArrayList<>();
 
-        // Generate and place asteroids of different sizes.
+        // Generate and place size 1 asteroids
         for (int i = 0; i < numSize1Asteroids; i++) {
-            Asteroid asteroid = new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 1);
-            this.enemyList.add(asteroid);
+            enemyList.add(new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 1));
         }
 
+        // Generate and place size 2 asteroids
         for (int i = 0; i < numSize2Asteroids; i++) {
-            Asteroid asteroid = new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 2);
-            this.enemyList.add(asteroid);
+            enemyList.add(new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 2));
         }
 
+        // Generate and place size 3 asteroids
         for (int i = 0; i < numSize3Asteroids; i++) {
-            Asteroid asteroid = new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 3);
-            this.enemyList.add(asteroid);
+            enemyList.add(new Asteroid(rnd.nextInt(1000), rnd.nextInt(1000), 3));
         }
     }
 
-    // Retrieves the list of enemies present in this level.
+    // --- Accessors ---
+
+    /// Returns the list of enemy characters for this level.
     public List<Character> getEnemyList() {
         return enemyList;
     }
 
-    // Getters and setters for level attributes.
     public int getLevelNumber() {
         return levelNumber;
     }

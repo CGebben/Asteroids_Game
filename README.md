@@ -1,8 +1,12 @@
-# Asteroids_Game
+# Asteroids_Game (Refactored Version)
 
 ## Overview
 
-This is a JavaFX-based implementation of the classic arcade game Asteroids. The game was developed as a group project for an Introduction to Java module final project. It follows specific academic guidelines rather than being a fully customized implementation. The project features enemy AI, level progression, and a scoring system. This project follows specific academic guidelines, and while fully functional, improvements to code structure, UI, and gameplay are planned for future updates.
+This project is a refactored and cleaned-up version of a JavaFX-based implementation of the classic arcade game Asteroids. Originally developed as a group project for an academic module, the initial version followed specific assignment guidelines and had limited scope due to time constraints. This new version represents a solo upgrade and restructuring effort by Colton Gebben to improve gameplay, code organization, and visual consistency while maintaining the spirit of the original.
+
+Special credit goes to Yunni, whose original contributions to character logic and aesthetic formed the foundation for much of the game's feel and behavior.
+
+This refactor addresses areas that were previously rushed or incomplete, and introduces new systems to stabilize game flow and make the codebase easier to understand, maintain, and extend.
 
 ## Contributors
 
@@ -16,86 +20,98 @@ This project was developed by the following team members:
 
 (Note: Some last names are unavailable due to limitations in project records.)
 
-## Features
-
-- Ship Movement & Physics: Players control a spaceship that can move, rotate, and shoot bullets.
-- Enemy AI: Aliens and asteroids that move and collide with the player.
-- Level Progression: Increasing difficulty across multiple levels.
-- Score Tracking: Players earn points by destroying enemies.
-- Game Over & High Score System: The game records player scores upon losing.
-
 ## My Contributions
 
-I contributed to the following aspects of the project:
+### Original Version
 
-- Level System: Designed and implemented level progression.
-- Game Loop: Managed the core game logic, specifically scene iteration updates.
-- Object Iterations: Handled interactions between bullets, enemies, and asteroids.
-- Debugging: Identified and resolved gameplay and logic issues.
+- Designed and implemented the Level System.
+- Managed the Game Loop and core scene update logic.
+- Built the Object Interactions between ship, bullets, and enemies.
+- Conducted Debugging for gameplay and logic flow.
 
-## Code Breakdown
+### Refactored Version
 
-### Main Components:
+- Moved major responsibilities out of Controller.java into dedicated classes:
 
-- App.java - Initializes the JavaFX application and loads the main menu UI.
-- Controller.java - Manages game logic, player input, and collision detection.
-- Ship.java - Represents the player's ship and its movement mechanics.
-- Bullet.java - Handles bullet movement and interactions.
-- Asteroid.java - Defines asteroid behavior and movement.
-- Alien.java - Controls enemy alien ships and their movement.
-- Level.java - Manages level structure and enemy spawning.
-- Character.java - Base class for all moving objects (ship, asteroids, bullets, etc.).
+GameLoop: All game update logic
+Collisions: All hit detection and point/life handling
+Instructions: Pop-up for instructions
+Scoring: Scoreboard and saving functionality
+Inputs: Key press tracking
 
-### Additional Files:
+- Created the Menus and Endgame classes for structured win/lose handling.
+- Replaced FXML-based UI with JavaFX code-based menus for better flexibility.
+- Smoothed out movement mechanics to be more responsive and satisfying.
+- Simplified UI and cleaned up inconsistent visuals.
 
-- main.fxml - Defines the JavaFX UI layout.
-- pom.xml - Manages dependencies and build configuration using Maven.
-- module-info.java - Specifies Java module dependencies.
+## Features
 
-## Areas for Improvement
+- Smooth ship movement and acceleration, including reverse controls.
+- Bullet system and enemy asteroid destruction with score tracking.
+- Cleanly separated logic for gameplay, scoring, and UI.
+- Win and Lose menus with Play Again, Quit, and Score-saving functionality.
 
-While the game is functional, several aspects could be refined due to time constraints:
+## Code Structure
 
-### Code Structure & Organization
+### Game Flow
 
-- Compartmentalization of Code: The Controller.java class handles too many responsibilities and should be broken into smaller classes.
+- App.java – Entry point for JavaFX application.
+- Controller.java – Initializes scene and sets up UI and game components.
+- GameLoop.java – Core animation loop and input handling.
+- Endgame.java – Transitions between game and end states.
 
-- Better Separation of Concerns: Game logic, UI elements, and physics should be more modular.
+### Object & Logic
 
-### UI & Game Design
+- Ship.java – Handles player movement, invincibility, and hyperspace.
+- Bullet.java – Simple bullet object with movement.
+- Asteroid.java – Rotating enemy object with sizes and break-up logic.
+- Character.java – Base class for all moving entities.
+- Level.java – Defines enemy layouts for each level.
+- Collisions.java – Checks and handles all hit interactions.
 
-- Game Over Screen: Needs a more structured design. Ideally, the “Game Over” message and score input should be on the same screen.
+### Utility
 
-- Ship Acceleration & Drifting: The current mechanics are functional but not fun. Movement should feel more responsive and less restrictive.
+- Menus.java – Displays main, win, and lose menus.
+- Scoring.java – Manages score saving and viewing.
+- Instructions.java – Displays game instructions from file.
+- Inputs.java – Key tracking system.
 
-- Consistent UI Scaling: The interface elements need adjustments for better readability and player experience.
+### Build & Configuration
+
+- pom.xml – Maven dependencies and build config (JavaFX, Java 21).
+- module-info.java – Java module system declaration.
 
 ## Setup & Running the Game
 
-Requirements:
+### Requirements
 
-- Java 21+
-- Maven
-- JavaFX 21+
+Java 21+
+Maven
+JavaFX 21+
 
-Steps:
+### Run Instructions
 
-1. Clone the repository.
-
-2. Compile and run with Maven:
-
-```
+cd asteroids-game
 mvn javafx:run
 
-```
+## Changes from the Original Project
 
-## Future Plans
+- Removed reliance on FXML; menus now defined in Java.
+- Code refactored for better separation of concerns.
+- Game flow clearly divided between setup, loop, and end states.
+- Player movement enhanced for better responsiveness.
+- Score input added for win screen.
+- UI made consistent across screens.
 
-- Refactoring and cleaning up the code structure.
-- Implementing smoother physics for the ship.
-- Improving the UI for better user experience.
-- Enhancing enemy AI behavior.
+## Areas for Future Work
+
+- Reintroduce Alien enemy and associated logic.
+- Add Main Menu button back into win/lose menus when transition bug is resolved.
+- Create more distinct level designs beyond showcasing asteroid sizes.
+- Add a timer or mechanic for temporary invincibility display.
+- Implement life-rewarding mechanics (e.g., extra lives on score milestones).
+- Improve instruction popup layout (currently too small).
 
 ## License
 
-This project was developed for academic purposes and is not intended for commercial use.
+This project was developed for academic purposes and later refactored for personal growth and demonstration. It is not intended for commercial use.

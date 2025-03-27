@@ -8,26 +8,43 @@ import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+/// Handles all game menu interfaces: main menu, win menu, and lose menu.
+/// Responsible for displaying, styling, and attaching actions to buttons.
 public class Menus {
-    private final Pane root; // The game pane to which menus are added
+
+    // --- Fields ---
+    private final Pane root;
+    private final Scoring scoreManager;
 
     private VBox mainMenu;
     private VBox winMenu;
     private VBox loseMenu;
+    private int finalScore = 0;
 
-    public Menus(Pane root, Scoring scoreManager, Runnable onStart, Runnable onHighScores, Runnable onInstructions,
-            Runnable onPlayAgain, Runnable onMainMenu, Runnable onQuit) {
+    // --- Constructor ---
+
+    public Menus(
+            Pane root,
+            Scoring scoreManager,
+            Runnable onStart,
+            Runnable onHighScores,
+            Runnable onInstructions,
+            Runnable onPlayAgain,
+            Runnable onMainMenu, // currently unused due to transition bug
+            Runnable onQuit) {
+
         this.root = root;
+        this.scoreManager = scoreManager;
+
         this.mainMenu = createMainMenu(onStart, onHighScores, onInstructions, onQuit);
         this.winMenu = createWinMenu(onPlayAgain, onQuit);
         this.loseMenu = createLoseMenu(onPlayAgain, onQuit);
-        this.scoreManager = scoreManager;
 
-        this.root.getChildren().addAll(mainMenu, winMenu, loseMenu);
-
-        // Show only main menu at start
+        root.getChildren().addAll(mainMenu, winMenu, loseMenu);
         showMainMenu();
     }
+
+    // --- Menu Creation ---
 
     private VBox createMainMenu(Runnable onStart, Runnable onHighScores, Runnable onInstructions, Runnable onQuit) {
         VBox menu = new VBox(20);
@@ -52,7 +69,7 @@ public class Menus {
         VBox menu = new VBox(20);
         menu.setAlignment(Pos.CENTER);
         menu.setPrefSize(Controller.Width, Controller.Height);
-        menu.setStyle("-fx-background-color: black;"); // Slightly transparent
+        menu.setStyle("-fx-background-color: black;");
 
         Text winText = new Text("YOU WIN!");
         winText.setFont(Font.font("System", 48));
@@ -83,6 +100,22 @@ public class Menus {
         return menu;
     }
 
+    // --- Button Factory ---
+
+    private Button createButton(String text, Runnable action) {
+        Button button = new Button(text);
+        button.setFont(Font.font("System", 24));
+        button.setStyle("-fx-background-color: transparent; -fx-text-fill: white;");
+
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: white; -fx-text-fill: black;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: white;"));
+        button.setOnAction(e -> action.run());
+
+        return button;
+    }
+
+    // --- Menu Visibility Control ---
+
     public void showMainMenu() {
         mainMenu.setVisible(true);
         winMenu.setVisible(false);
@@ -94,7 +127,6 @@ public class Menus {
         mainMenu.setVisible(false);
         winMenu.setVisible(true);
         loseMenu.setVisible(false);
-        System.out.println("Menus.showMainMenu() called");
     }
 
     public void showLoseMenu() {
@@ -109,21 +141,7 @@ public class Menus {
         loseMenu.setVisible(false);
     }
 
-    private Button createButton(String text, Runnable action) {
-        Button button = new Button(text);
-        button.setFont(Font.font("System", 24));
-        button.setStyle("-fx-background-color: transparent; -fx-text-fill: white;");
-
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: white; -fx-text-fill: black;"));
-
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: transparent; -fx-text-fill: white;"));
-
-        button.setOnAction(e -> action.run());
-        return button;
-    }
-
-    private final Scoring scoreManager;
-    private int finalScore = 0;
+    // --- Utility ---
 
     public void setFinalScore(int points) {
         this.finalScore = points;

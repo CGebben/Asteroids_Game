@@ -2,6 +2,8 @@ package com.asteroids;
 
 import javafx.stage.Stage;
 
+/// Manages game end states: win or loss.
+/// Displays the appropriate menu and stops the game loop.
 public class Endgame {
 
     private final Stage stage;
@@ -16,6 +18,7 @@ public class Endgame {
         this.gameLoop = gameLoop;
     }
 
+    /// Handles the win condition: stops game, shows win menu, and stores score.
     public void handleWin(int points) {
         System.out.println("Endgame.handleWin() called with points: " + points);
         if (gameLoop != null) {
@@ -23,17 +26,18 @@ public class Endgame {
             gameLoop.stop();
         }
 
-        // Re-add and show only the win menu
         menuManager.setFinalScore(points);
         menuManager.showWinMenu();
         menuManager.getRoot().getChildren().add(menuManager.getWinMenu());
     }
 
+    /// Handles the loss condition: stops game and shows lose menu.
     public void handleLose(int points) {
         if (gameLoop != null) {
             gameLoop.stop();
         }
-        menuManager.setFinalScore(points); // reuse same method
+
+        menuManager.setFinalScore(points);
         menuManager.getRoot().getChildren().clear();
         menuManager.showLoseMenu();
         menuManager.getRoot().getChildren().add(menuManager.getLoseMenu());

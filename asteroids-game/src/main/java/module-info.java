@@ -1,9 +1,4 @@
-/**
- * The module-info.java file specifies dependencies and accessibility for the
- * Java module.
- * This ensures proper integration with JavaFX and encapsulation of the
- * application.
- */
+// The module-info.java file specifies dependencies and accessibility for the Java module.
 module com.asteroids {
 
     // Require JavaFX modules transitively, allowing access in dependent modules.

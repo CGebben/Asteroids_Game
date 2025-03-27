@@ -5,21 +5,22 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/// Entry point for the Asteroids game. Initializes the stage and controller.
 public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Create a blank pane (game + UI will render here)
+        // Create game pane and set size
         Pane root = new Pane();
         root.setPrefSize(Controller.Width, Controller.Height);
 
-        // Set up the main scene and attach it to the stage
+        // Attach scene to stage
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Asteroids");
         stage.show();
 
-        // Create a Controller instance to manage game and callbacks
+        // Create and set up game controller
         Controller controller = new Controller(root, stage, scene);
         controller.setupMenus();
     }
